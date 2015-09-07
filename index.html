@@ -10,8 +10,8 @@
     <!--Делаю контроллер, чтобы вывести инфу, затем делаю алиас-->
     <div ng-controller="StoreController as store" ng-hide="store.product.soldOut">
         <ul class="list-group">
-            <!--Теперь использую ng-repeat, чтобы повторять объекты gems, фильтр limitTо уменьшает количество элементов до указанного. orderBy - сортирует элементы, без - будет сортировать в обратном порядке-->
-            <li class="list-group-item" ng-repeat="product in store.products | limitTo:3 | orderBy:'price'">
+            <!--Теперь использую ng-repeat, чтобы повторять объекты gems, фильтр limitTо уменьшает количество элементов до указанного. orderBy - сортирует элементы, без - будет сортировать в обратном порядке, также если поставить - перед фильтром - значит в обратном порядке-->
+            <li class="list-group-item" ng-repeat="product in store.products | limitTo:3 | orderBy:'-price'">
                 <h1>{{product.name}}</h1>
                 <!--| - означает возьми результат первого выражения и пробрось во второе, currency - локализует валюты и доставляет
                 десятичные цифры-->
@@ -21,6 +21,36 @@
                 <button ng-show="store.product.canPurchase">Add to cart</button>
                 <!--Так подгружаю картинки-->
                 <img ng-src="{{product.images[0].full}}" />
+
+                <!-- ng-init - задает init значение в скоупе
+                ng-class - передаю объект, где active - имя класса (key), а value - значение, при котором этот класс нужно показывать
+                -->
+                <section ng-controller="PanelController as panel">
+                    <ul class="nav nav-pills">
+                        <li ng-class="{active: panel.isSelected(1)}">
+                            <a href="" ng-click="panel.selectTab(1)">Description</a>
+                        </li>
+                        <li ng-class="{active: panel.isSelected(2)}">
+                            <a href="" ng-click="panel.selectTab(2)">Specification</a>
+                        </li>
+                        <li ng-class="{active: panel.isSelected(3)}">
+                            <a href="" ng-click="panel.selectTab(3)">Reviews</a>
+                        </li>
+                    </ul>
+
+                    <div class="panel" ng-show="tab === 1">
+                        <h4>Description</h4>
+                        <p>{{product.description}}</p>
+                    </div>
+                    <div class="panel" ng-show="tab === 2">
+                        <h4>Specification</h4>
+                        <p>not yet</p>
+                    </div>
+                    <div class="panel" ng-show="tab === 3">
+                        <h4>Reviews</h4>
+                        <p>not yet</p>
+                    </div>
+                </section>
             </li>
         </ul>
     </div>

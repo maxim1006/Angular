@@ -8,9 +8,22 @@
         console.log(Array.prototype.slice.call(this, arguments));
     });
 
+    //еще один контроллер
+    app.controller('PanelController', function() {
+        this.tab = 1;
+
+        this.selectTab = function(setTab) {
+            this.tab = setTab;
+        };
+
+        this.isSelected = function(checkTab) {
+            return this.tab === checkTab;
+        }
+    });
+
     var gems = [
         {
-            name: "gemName",
+            name: "first gemName",
             price: 2.95,
             description: 'gem description',
             canPurchase: false,
@@ -34,7 +47,7 @@
             price: 1.9,
             description: 'third gem description',
             canPurchase: false,
-            soldOut: false,
+            soldOut: true,
             images: [{
                 full: 'images/3.jpg'
             }]
