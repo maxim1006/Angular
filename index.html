@@ -38,17 +38,50 @@
                         </li>
                     </ul>
 
-                    <div class="panel" ng-show="tab === 1">
+                    <div class="panel" ng-show="panel.tab === 1">
                         <h4>Description</h4>
                         <p>{{product.description}}</p>
                     </div>
-                    <div class="panel" ng-show="tab === 2">
+                    <div class="panel" ng-show="panel.tab === 2">
                         <h4>Specification</h4>
                         <p>not yet</p>
                     </div>
-                    <div class="panel" ng-show="tab === 3">
+                    <div class="panel" ng-show="panel.tab === 3">
                         <h4>Reviews</h4>
-                        <p>not yet</p>
+                        <div ng-repeat="review in product.reviews">
+                            <b>Stars: {{review.stars}}</b>
+                            {{review.body}}
+                            <cite>by: {{review.author}}</cite>
+                        </div>
+
+                        <form name="reviewForm" ng-controller="ReviewController as reviewCtrl" ng-submit="reviewCtrl.addReview(product)">
+                            <div>
+                                <b>Stars: {{reviewCtrl.review.stars}}</b>
+                                {{reviewCtrl.review.body}}
+                                <cite>by: {{reviewCtrl.review.author}}</cite>
+                            </div>
+                            <!-- ng-model - директива для связывания модели и вью, т.е. например review.stars связывается с {{review.stars}}-->
+
+                            <!-- Также можно использовать ng-model директиву для чекбоксов
+                            <input ng-model="review.terms" type="checkbox" /> - возвращает true/false text
+
+                            также на radio buttons
+                            <input ng-model="review.color" type="radio" value="red" /> Red
+                            <input ng-model="review.color" type="radio" value="blue" /> blue
+                            <input ng-model="review.color" type="radio" value="green" /> green
+                            -->
+                            <select ng-model="reviewCtrl.review.stars">
+                                <option value="1">1 star</option>
+                                <option value="2">2 star</option>
+                                <option value="3">3 star</option>
+                                <option value="4">4 star</option>
+                                <option value="5">5 star</option>
+                            </select>
+                            <textarea ng-model="reviewCtrl.review.body"></textarea>
+                            <label>by</label>
+                            <input type="email" ng-model="reviewCtrl.review.author">
+                            <input type="submit" value="submit">
+                        </form>
                     </div>
                 </section>
             </li>
