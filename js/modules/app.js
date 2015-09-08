@@ -69,7 +69,24 @@
             soldOut: false,
             images: [{
                 full: 'images/2.jpg'
-            }]
+            }],
+            reviews: [
+                {
+                    stars: 5,
+                    body: 'I love this product',
+                    author: "love@mail.ru"
+                },
+                {
+                    stars: 1,
+                    body: 'I hate this product',
+                    author: "hate@mail.ru"
+                },
+                {
+                    stars: 3,
+                    body: 'I middle this product',
+                    author: "middle@mail.ru"
+                }
+            ]
         },
         {
             name: "third gemName",
@@ -79,7 +96,24 @@
             soldOut: true,
             images: [{
                 full: 'images/3.jpg'
-            }]
+            }],
+            reviews: [
+                {
+                    stars: 5,
+                    body: 'I love this product',
+                    author: "love@mail.ru"
+                },
+                {
+                    stars: 1,
+                    body: 'I hate this product',
+                    author: "hate@mail.ru"
+                },
+                {
+                    stars: 3,
+                    body: 'I middle this product',
+                    author: "middle@mail.ru"
+                }
+            ]
         }
     ];
 })();
