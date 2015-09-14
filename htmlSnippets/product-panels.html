@@ -1,0 +1,63 @@
+<!-- ng-init - задает init значение в скоупе
+                ng-class - передаю объект, где active - имя класса (key), а value - значение, при котором этот класс нужно показывать
+                -->
+<section>
+    <ul class="nav nav-pills">
+        <li ng-class="{active: panel.isSelected(1)}">
+            <a href="" ng-click="panel.selectTab(1)">Description</a>
+        </li>
+        <li ng-class="{active: panel.isSelected(2)}">
+            <a href="" ng-click="panel.selectTab(2)">Specification</a>
+        </li>
+        <li ng-class="{active: panel.isSelected(3)}">
+            <a href="" ng-click="panel.selectTab(3)">Reviews</a>
+        </li>
+    </ul>
+
+    <div class="panel" ng-show="panel.tab === 1">
+        <product-description></product-description>
+    </div>
+    <div class="panel" ng-show="panel.tab === 2">
+        <product-specs></product-specs>
+    </div>
+    <div class="panel" ng-show="panel.tab === 3">
+        <product-reviews></product-reviews>
+
+        <!-- ng-submit - позволяет вызывать функцию на событие сабмит
+        novalidate - флаг отключает дефолтную валидацию формы
+
+        reviewForm.$valid - можно использовать как условие для вызова функции в случае если форма заполнена-->
+        <form name="reviewForm" ng-controller="ReviewController as reviewCtrl" ng-submit="reviewForm.$valid && reviewCtrl.addReview(product)" novalidate>
+            <div>
+                <b>Stars: {{reviewCtrl.review.stars}}</b>
+                {{reviewCtrl.review.body}}
+                <cite>by: {{reviewCtrl.review.author}}</cite>
+            </div>
+            <!-- ng-model - директива для связывания модели и вью, т.е. например review.stars связывается с {{review.stars}}-->
+
+            <!-- Также можно использовать ng-model директиву для чекбоксов
+            <input ng-model="review.terms" type="checkbox" /> - возвращает true/false text
+
+            также на radio buttons
+            <input ng-model="review.color" type="radio" value="red" /> Red
+            <input ng-model="review.color" type="radio" value="blue" /> blue
+            <input ng-model="review.color" type="radio" value="green" /> green
+
+            required - помечаю обязательные поля
+            -->
+            <select ng-model="reviewCtrl.review.stars" required>
+                <option value="1">1 star</option>
+                <option value="2">2 star</option>
+                <option value="3">3 star</option>
+                <option value="4">4 star</option>
+                <option value="5">5 star</option>
+            </select>
+            <textarea ng-model="reviewCtrl.review.body" required></textarea>
+            <label>by</label>
+            <input type="email" ng-model="reviewCtrl.review.author" required>
+            <!-- reviewForm.$valid - это ангуларовская фича, reviewForm - имя формы, $valid - свойство, которое станет тру при заполнении всех полей в форме-->
+            <div>reviewform is {{reviewForm.$valid}}</div>
+            <input type="submit" value="submit">
+        </form>
+    </div>
+</section>
