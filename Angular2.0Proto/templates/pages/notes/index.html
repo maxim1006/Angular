@@ -1,0 +1,19 @@
+<div class="note-wrapper">
+    <div class="note-content">
+        <div class="notes-header">
+            <h1 title="Notes">Notes</h1>
+        </div>
+        <!--ng-href - проставляю ссылку для каждого ноута, для того, чтобы можно было посмотреть подробный вью-->
+        <div class="note-wrapper">
+            <a class="card-notes"
+               ng-repeat="note in indexController.notes"
+               ng-href="#/notes/{{note.id}}">
+                <div class="card" title="{{note.title}}">
+                    <h2 class="h3">{{note.title}}</h2>
+                    <p>{{note.description}}</p>
+                </div>
+            </a>
+        </div>
+
+    </div>
+</div>
