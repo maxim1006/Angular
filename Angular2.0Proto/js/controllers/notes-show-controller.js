@@ -5,7 +5,8 @@ angular.module('NoteWrangler')
     var self = this;
 
     $http({method: 'GET', url: './js/model/notes/' + $routeParams.id + '.json'}).success(function(data) {
+        console.log($routeParams);
         self.note = data;
-        console.log(data);
-    })
+/*        console.log(data);*/
+    });
 });

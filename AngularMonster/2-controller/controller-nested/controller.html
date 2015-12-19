@@ -1,0 +1,24 @@
+<!doctype html>
+<!--нужно, чтобы запустить модуль, который запускается при загрузке страницы-->
+<html lang="ru" ng-app="app">
+<head>
+    <meta charset="UTF-8">
+    <title>Angular</title>
+</head>
+<body>
+
+<div ng-controller="myName as my">
+
+    <div ng-controller="wifeName as wife">
+        <button ng-click="my.showName(wife.name + ' ' + wife.myFactory.can)">Show name</button>
+    </div>
+    <div ng-controller="brotherName as brother">
+        <button ng-click="my.showName(brother.name + ' ' + brother.myFactory.can)">Show name</button>
+    </div>
+
+</div>
+
+<script src="../../js/plugins/angular.min.js"></script>
+<script src="./js/modules/main.js"></script>
+</body>
+</html>

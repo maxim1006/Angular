@@ -7,5 +7,5 @@ angular.module('NoteWrangler')
 
         $http({method: 'GET', url: './js/model/notes/notes.json'}).success(function(data) {
             self.notes = data;
-        })
+        });
     });

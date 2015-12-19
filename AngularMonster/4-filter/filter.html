@@ -1,0 +1,21 @@
+<!doctype html>
+<!--нужно, чтобы запустить модуль, который запускается при загрузке страницы-->
+<html lang="ru" ng-app="app">
+<head>
+    <meta charset="UTF-8">
+    <title>Angular</title>
+</head>
+<body>
+
+<div ng-controller="mainCtrl as main">
+    <ul>
+        <li ng-repeat="price in main.prices | limitTo:2 | orderBy:'-'">
+            {{price | moneyFilter}}
+        </li>
+    </ul>
+</div>
+
+<script src="../js/plugins/angular.min.js"></script>
+<script src="./js/modules/main.js"></script>
+</body>
+</html>

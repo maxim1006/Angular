@@ -1,6 +1,6 @@
 (function() {
     //сперва надо создать модуль,
-    //указываю что store модуль зависит от 'store-products'
+    //указываю что store модуль зависит от 'store-products', туда вынес директивы и могу их использовать какбы от этого модуля
     var app = angular.module('store', ['store-products']);
 
 

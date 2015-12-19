@@ -1,0 +1,23 @@
+<!doctype html>
+<!--нужно, чтобы запустить модуль, который запускается при загрузке страницы-->
+<html lang="ru" ng-app="app">
+<head>
+    <meta charset="UTF-8">
+    <title>Angular</title>
+</head>
+<body>
+
+<div ng-controller="myCtrl" ng-cloak>
+    {{getName()}}
+    {{name}}
+
+    <button ng-click="setName('Aliya')">Change to Aliya</button>
+    <button ng-click="setName('Max')">Change to Max</button>
+
+    {{myFactory.hello()}}
+</div>
+
+<script src="../../js/plugins/angular.min.js"></script>
+<script src="./js/modules/main.js"></script>
+</body>
+</html>
