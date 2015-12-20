@@ -52,5 +52,5 @@ app.directive("custom", function() {
 
 
 app.controller("mainCtrl", function() {
-   this.name = "Anton";
+   //this.name = "Anton";
 });

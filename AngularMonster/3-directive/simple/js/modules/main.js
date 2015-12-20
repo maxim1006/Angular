@@ -20,6 +20,7 @@ app.directive("custom", function() {
         link: function(scope, element, attrs) {
             var text = element.text();
             element.text(text + " добавленный в конец текст")
+            console.log(element[0]);
         }
     }
 });
