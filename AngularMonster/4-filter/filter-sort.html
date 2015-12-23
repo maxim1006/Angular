@@ -1,0 +1,52 @@
+<!doctype html>
+<!--нужно, чтобы запустить модуль, который запускается при загрузке страницы-->
+<html lang="ru" ng-app="app">
+<head>
+    <meta charset="UTF-8">
+    <title>Angular</title>
+    <style>
+        [ng\:cloak], [ng-cloak], [data-ng-cloak], [x-ng-cloak], .ng-cloak, .x-ng-cloak {
+            display: none !important;
+        }
+
+        .arrow_up:before {
+            content: '↑';
+            margin-right: 5px;
+        }
+
+        .arrow_down:before {
+            content: '↓';
+            margin-right: 5px;
+        }
+    </style>
+</head>
+<body>
+
+<div ng-controller="mainCtrl as main">
+    <label>Any: <input ng-model="search.$"></label> <br><br>
+    <label>Name only <input ng-model="search.name"></label><br><br>
+    <label>Age only <input ng-model="search.age"></label><br><br>
+
+    <button ng-click="main.sortBy('name')">Sort by name
+        <span ng-show="main.value === 'name'" ng-class="main.arrowClass"></span>
+    </button>
+    <button ng-click="main.sortBy('age')">Sort by age
+        <span ng-show="main.value === 'age'" ng-class="main.arrowClass"></span>
+    </button>
+    <button ng-click="main.sortBy('occupation')">Sort by occupation
+        <span ng-show="main.value === 'occupation'" ng-class="main.arrowClass"></span>
+    </button>
+
+    <ul>
+        <li ng-repeat="item in main.data | orderBy:main.value:main.reverse | filter:search:strict"  ng-cloak>
+
+            <div><span>{{item.name}}</span> <span>{{item.age}}</span> <span>{{item.occupation}}</span></div>
+
+        </li>
+    </ul>
+</div>
+
+<script src="../js/plugins/angular.min.js"></script>
+<script src="./js/modules/filter.sort.js"></script>
+</body>
+</html>
