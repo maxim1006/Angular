@@ -1,0 +1,243 @@
+<!doctype html>
+<html ng-app="App">
+<head>
+    <meta charset="UTF-8">
+    <title>Document</title>
+</head>
+<body>
+
+
+
+<div ng-controller="ListCtrl as list">
+    <label><input name="radioGroup" type="radio" value="names" ng-model="list.mode"> Имена</label>
+    <label><input name="radioGroup" type="radio" value="ages" ng-model="list.mode"> Возраст</label>
+    <!-- Сюда подгружается контент из указанного урла -->
+    <div ng-include="list.setUrl()"></div>
+</div>
+
+
+
+<div id="tabs" ng-controller="TabsCtrl as tabs">
+    <ul>
+        <li ng-repeat="tab in tabs.tabs" ng-class="{active:tabs.isActiveTab(tab.url)}" ng-click="tabs.onClickTab(tab)">
+            {{tab.title}}
+        </li>
+    </ul>
+    <div id="mainView">
+        <!-- Сюда подгружается контент из указанного урла -->
+        <div ng-include="tabs.currentTab"></div>
+    </div>
+</div>
+
+
+
+<script type="text/ng-template" id="lists_names.tpl.html">
+    <ul ng-show="list.mode === 'names'">
+        <li ng-repeat="name in list.names">{{name.name}}</li>
+    </ul>
+</script>
+
+<script type="text/ng-template" id="lists_ages.tpl.html">
+    <ul ng-show="list.mode === 'ages'">
+        <li ng-repeat="age in list.ages">{{age.age}}</li>
+    </ul>
+</script>
+
+<script type="text/ng-template" id="tab1.tpl.html">
+    <div id="tab1"><h1>Content tab 1</h1></div>
+</script>
+
+<script type="text/ng-template" id="tab2.tpl.html">
+    <div id="tab2"><h1>Content tab 2</h1></div>
+</script>
+
+<script type="text/ng-template" id="tab3.tpl.html">
+    <div id="tab3"><h1>Content tab 3</h1></div>
+</script>
+
+<script src="../libs/angular.min.js"></script>
+
+<script>
+
+    (function() {
+
+        var names = [
+            {name: "Max"},
+            {name: "Aliya"},
+            {name: "Anton"}
+        ];
+
+        var ages = [
+            {age: "28"},
+            {age: "29"},
+            {age: "29"}
+        ];
+
+        App = angular.module("App", []);
+
+        App.controller("ListCtrl", function() {
+            var _this = this;
+
+            this.mode = "names";
+            this.names = names;
+            this.ages = ages;
+
+            this.setUrl = function() {
+                if (_this.mode === "names") {
+                    return "lists_names.tpl.html";
+                } else if (_this.mode === "ages") {
+                    return "lists_ages.tpl.html";
+                }
+            };
+        });
+
+        App.controller('TabsCtrl', ['$scope', function ($scope) {
+            var _this = this;
+
+            this.tabs = [{
+                title: 'tab1',
+                url: 'tab1.tpl.html'
+            }, {
+                title: 'tab2',
+                url: 'tab2.tpl.html'
+            }, {
+                title: 'tab3',
+                url: 'tab3.tpl.html'
+            }];
+
+            this.currentTab = 'tab1.tpl.html';
+
+            this.onClickTab = function (tab) {
+                _this.currentTab = tab.url;
+            };
+
+            this.isActiveTab = function(tabUrl) {
+                return tabUrl == _this.currentTab;
+            };
+        }]);
+
+    })();
+
+</script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<!--
+
+В особую группу директив можно выделить директивы, которые позволяют стилизовать элементы или управлять ими:
+
+ng-style: устанавливает у элемента стили css
+
+ng-class: задает элементу определенный класс
+
+ng-class-even: устанавливает класс для четных элементов
+
+ng-class-odd: устанавливает класс для нечетных элементов
+
+ng-hide: скрывает элемент
+
+ng-show: делает элемент видимым
+
+ng-if: задает для элемента некоторое условие. Если ng-if принимает значение false, то элемент с директивой удаляется из структуры DOM, а при значении true, наоборот, добавляется.
+
+-->
+
+<style type="text/css">
+    .green {
+        color: green;
+    }
+</style>
+
+<div ng-controller="StylizationCTRL as style">
+    <h3>StylizationCTRL</h3>
+    <div ng-style="style.style">Lorem</div>
+    <div ng-class="style.class">Lorem</div>
+    <button ng-click="style.ngIf = true">Показать ng-if</button><span ng-if="style.ngIf">Пример с ng-if</span>
+</div>
+
+<script>
+    (function() {
+
+        App.controller("StylizationCTRL", function() {
+
+            this.style = {color: 'blue'};
+            this.class = "green";
+            this.ngIf = false;
+
+        });
+
+    })();
+</script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<!--
+
+События
+
+Кроме директивы ng-click, предназначенной для обработки кликов по элементам, имеется еще ряд директив:
+
+ng-blur: определяет поведение для события blur, которое возникает при потере элементом фокуса
+
+ng-focus: определяет поведение для события focus, которое возникает при получении фокуса элементом
+
+ng-change: определяет поведение для события change, которое возникает при изменении элементом состояния, например, при нажатии на элемент input type="checkbox"
+
+ng-submit: определяет поведение для события submit, которое возникает при отправке формы
+
+ng-copy/ng-cut/ng-paste: определяет поведение для событий копирования, вырезки и вставки соответственно
+
+ng-dblclick: та же ng-click, только обрабатывается двойное нажатие
+
+ng-mousedown: для обработки нажатия клавиши мыши
+
+ng-mouseup: для обработки отжатия мыши
+
+ng-mouseenter: для обработки наведения курсора в определенную область
+
+ng-mouseleave: для обработки ухода курсора с определенной области
+
+ng-mousemove: для обработки перемещения курсора мыши
+
+ng-keydown: обработка нажатия клавишы клавиатуры
+
+ng-keypress: обработка нажатия клавишы клавиатуры
+
+ng-keyup: обработка отжатия клавишы клавиатуры
+
+-->
+
+
+
+
+
+
+
+
+
+
+
+</body>
+</html>

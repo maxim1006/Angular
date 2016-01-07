@@ -1,0 +1,123 @@
+<!doctype html>
+<html ng-app="App">
+<head>
+    <meta charset="UTF-8">
+    <title>Document</title>
+</head>
+<body ng-controller="CustomDirectiveController as custom">
+
+
+<!--Кроме метода factory для создания сервиса можно также использовать метод Module.service-->
+
+
+<!--Также есть встроенные сервисы
+
+$anchorScroll: перемещает полосу прокрутки к определенной ссылке на странице
+
+$document: предоставляет объект jqLite, который содержит стандартный js-объек window.document
+
+$interval: представляет обертку вокруг функции window.setInterval
+
+$location: предоставляет доступ к URL
+
+$window: предоставляет стандартный javascript-объект window
+
+$http - нужен для аджакс запросов
+
+$q - втроенная работа с промисами
+
+$timeout - тоже что и setTimeout, только на выходе промисы
+
+-->
+
+
+
+
+<custom-element>
+    <p>то что оттрансклудил перед списком фреймворков</p>
+</custom-element>
+
+<div ng-controller="AnotherController as another">
+    <div ng-repeat="item in another.items | orderBy:'-name'">{{item.name}}</div>
+</div>
+
+
+
+
+
+<script src="../libs/angular.min.js"></script>
+
+<script>
+
+    (function() {
+
+        var App = angular.module("App", []);
+
+
+
+        App.controller("CustomDirectiveController", function(namesService, $window) {
+            var self = this;
+            console.log($window.angular.version);
+            namesService.then(function(data) {
+                self.items = data;
+            });
+        });
+
+
+
+        App.controller("AnotherController", function(namesService, $document, $timeout) {
+            var self = this;
+            console.log($document);
+            namesService.then(function(data) {
+                self.items = data;
+            });
+
+            var timeout = $timeout(function() {
+                console.log("Прошло 3 секунды");
+            }, 3000);
+
+            $timeout(function() {
+                $timeout.cancel(timeout);
+                console.log("Прошло 2 секунды и отключил таймаут на 3 секунды");
+            }, 2000);
+        });
+
+
+
+        App.factory('namesService', function($http, $q) {
+            var promise = $q.defer();
+
+            $http
+                .get("jsonNames.json")
+                .success(function(data, status, headers, config) {
+                    promise.resolve(data);
+                })
+                .error(function(data, status, headers, config) {
+                    promise.reject(status);
+                });
+
+            return promise.promise
+        });
+
+
+
+        App.directive("customElement", function($timeout) {
+            return {
+                link: function(scope, element, attrs) {
+                    $timeout(function() {
+                            angular.element(element[0].querySelectorAll("li")).on('click', function() {
+                        });
+                    });
+                },
+                template: "<div ng-transclude></div><ul><li ng-repeat='item in custom.items'>{{item.name}}</li></ul>",
+                transclude: true
+            }
+
+        });
+
+    })();
+
+</script>
+
+</body>
+</html>

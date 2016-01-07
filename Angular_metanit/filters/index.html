@@ -1,0 +1,115 @@
+<!doctype html>
+<html ng-app="App">
+<head>
+    <meta charset="UTF-8">
+    <title>Document</title>
+</head>
+<body>
+
+<div ng-controller="FiltersController as filter">
+    <h3>Filter text</h3>
+    <div>{{filter.value | lowercase}}</div>
+    <div>{{filter.value | uppercase}}</div>
+</div>
+
+<div ng-controller="NumberController as numberCtrl">
+    <h3>Filter number and currency</h3>
+    <div>{{numberCtrl.value | number: 0}}</div>
+    <div>{{numberCtrl.value | number: 2}}</div>
+    <div>{{numberCtrl.value | currency}}</div>
+</div>
+
+<div ng-controller="DateController as dateCtrl">
+    <h3>Date filter</h3>
+    <div>{{dateCtrl.value | date:'dd/MM/yyyy HH:mm:ss'}}</div>
+</div>
+
+<div ng-controller="OrderController as orderCtrl">
+    <h3>Order and sort filters</h3>
+    <ul>
+        <li ng-repeat="item in orderCtrl.value | limitTo:4 | orderBy:'-name' ">{{item.name}}</li>
+    </ul>
+
+    <select ng-model="orderCtrl.letter">
+        <option ng-repeat="letter in orderCtrl.letters">{{letter}}</option>
+    </select>
+    <div>
+        <input type="text" ng-model="orderCtrl.filterName">
+    </div>
+    <div>
+        <input type="text" ng-model="search.$">
+    </div>
+    <!-- Тут примеры разных фильтров, самый интересный последний, кастомный в нем загружаю массивы слов которые нужно показать и которые нужно исключить filterText - это название фильтра, orderCtrl.forbiddenWords - аргумент у фильтра
+    Более простой способ был бы не подгружать файлы а сразу засунуть их в фильтр. Однако если загрузить данные прямо в фильтре, то не сработает так как фильтр применится пока еще не будет данных.-->
+    <ul>
+        <li ng-repeat="
+            item in orderCtrl.value |
+            filter:orderCtrl.letter |
+            filter:{name:orderCtrl.filterName} |
+            filter:search:strict
+        ">{{item.name | filterText:orderCtrl.forbiddenWords}}</li>
+    </ul>
+</div>
+
+
+
+
+
+
+
+
+<script src="../libs/angular.min.js"></script>
+
+<script>
+
+    (function() {
+
+        var App = angular.module("App", []);
+
+        App.controller("FiltersController", function() {
+            this.value = "Lorem";
+        });
+
+        App.controller("NumberController", function() {
+            this.value = 123456.12;
+        });
+
+        App.controller("DateController", function() {
+            this.value = +new Date();
+        });
+
+        App.controller("OrderController", function($filter, $http) {
+            var self = this;
+
+            this.forbiddenWords = [];
+            this.value = [];
+
+            $http.get('jsonNames.json').success(function(data) {
+                self.value = data;
+            });
+
+            $http.get('jsonForbiddenWords.json').success(function(data) {
+                self.forbiddenWords = data;
+            });
+
+            this.letters = ["M", "A", "D", "G", "E", "N"];
+        });
+
+        App.filter("filterText", function() {
+            return function(text, forbiddenArr) {
+                var mask = "***";
+
+                if (~forbiddenArr.indexOf(text)) {
+                    return mask;
+                } else {
+                    return text;
+                }
+            }
+        });
+
+    })();
+
+</script>
+
+</body>
+</html>

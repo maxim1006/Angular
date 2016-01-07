@@ -1,0 +1,120 @@
+<!doctype html>
+<html ng-app="App">
+<head>
+    <meta charset="UTF-8">
+    <title>Document</title>
+</head>
+<body ng-controller="listNamesCtrl as listNames">
+
+
+<list-names></list-names>
+
+
+
+
+<script src="../libs/angular.min.js"></script>
+
+<script>
+
+    (function() {
+
+        var model = [
+            {name: "Max"},
+            {name: "Aliya"},
+            {name: "Anton"}
+        ];
+
+        var App = angular.module("App", [])
+            //run - вызывается при регистрации модуля, а $rootScope - это типо $scope глобальный объект
+                  .run(function($rootScope) {
+                      $rootScope.moduleName = "myApp";
+                      $rootScope.message = "Hello AngularJS"
+                  });
+
+        App.controller("listNamesCtrl", function($rootScope) {
+            //можно $rootScope вызвать где угодно
+            //console.log($rootScope.moduleName);
+
+            var _this = this,
+                currentEditInputFocused;
+
+            this.names = model;
+
+            this.addName = function(name) {
+
+                if (checkName(name)) return;
+
+                _this.names.push({
+                    name: name
+                });
+            };
+
+            this.removeName = function($index) {
+                _this.names.splice($index, 1);
+            };
+
+            this.editName = function($index, name) {
+
+                if (checkName(name)) return;
+
+                _this.names[$index] = {
+                    name: name
+                };
+
+                _this['showEdit' + $index] = false;
+            };
+
+            this.onBlur = function($index, editName) {
+                _this['showEdit' + $index] = false;
+                currentEditInputFocused = null;
+
+                _this.editName($index, editName);
+            };
+
+            this.showEditField = function($index) {
+                _this['showEdit' + currentEditInputFocused] = false;
+                _this['showEdit' + $index] = true;
+                currentEditInputFocused = $index;
+            };
+
+        });
+
+        App.directive('listNames', function() {
+            return {
+                templateUrl: './list-names.html'
+            };
+        });
+
+
+        App.directive('focusAuto', function($timeout) {
+            return {
+                scope: { trigger: '=focusAuto' },
+                link: function(scope, element, attr) {
+                    scope.$watch('trigger', function(value) {
+                        if(value === true) {
+                            $timeout(function() {
+                                element[0].focus();
+                                element[0].value = attr['initialValue'];
+                                scope.trigger = false;
+                            }, 0);
+                        }
+                    });
+                }
+            };
+        });
+
+
+
+        /*Helpers*/
+        function checkName(name) {
+            return !name;
+        }
+
+
+
+    })();
+
+</script>
+
+</body>
+</html>

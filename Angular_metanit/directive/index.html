@@ -1,0 +1,131 @@
+<!doctype html>
+<html ng-app="App">
+<head>
+    <meta charset="UTF-8">
+    <title>Document</title>
+</head>
+<body ng-controller="CustomDirectiveController as custom">
+
+
+<!--Для навигации по html-странице мы можем применять ряд методов:
+
+children(): возвращает набор дочерних элементов
+
+eq(index): возвращает элемент по определенному индексу из коллекции элементов
+
+find(tag): получает все элементы по определенному тегу
+
+next(): возвращает следующий сестринский элемент
+
+parent(): возвращает родительский элемент
+
+html(): возвращает html-код элемента
+
+text(): возвращает текстовое содержимое элемента
+
+
+
+Манипуляция элементами
+
+addClass(name): добавляет к элементу класс
+
+attr(name) / attr(name, value): получает значение value атрибута name элемента и устанавливает его
+
+css(name) / css(name, value): получает значение value стиля name у элемента и устанавливает его
+
+hasClass(name): возвращает true, если элемент имеет класс name
+
+prop(name) / prop(name, value): получает значение value свойстваа name элемента и устанавливает его
+
+removeAttr(name): удаляет у элемента атрибут
+
+removeClass(name): удаляет у элемента класс
+
+text(value): устанавливает текстовое значение у элемента
+
+toggleClass(name): переключает класс - класс name добавляется, а все ранее имевшиеся классы удаляются
+
+val() / val(value): получает значение атрибута value и устанавливает его значение
+
+
+
+
+Создание и удаление элементов
+
+Следующие методы позволяют управлять созданием и удалением элементов:
+
+angular.element(html): создает определенный элемент с кодом html
+
+after(elements): добавляет элементы elements после элемента, на котором вызывается данный метод
+
+append(elements): добавляет элементы elements в качестве дочерних в конец элемента, на котором вызывается данный метод
+
+clone(): создает копию элемента, для которого вызывается метод
+
+prepend(elements): добавляет элементы elements в качестве дочерних в начало элемента, на котором вызывается данный метод
+
+remove(): удаляет элемент
+
+replaceWith(element): заменяет элемент, на котором вызывается метод, другим элементом, который передается в качестве параметра
+
+wrap(element): обертывает элемент, на котором вызывается метод, новым элементом, передающимся в качестве параметра
+
+
+
+Регистрация событий
+
+jqLite поддерживает регистрацию стандартных событий javascript. Для этого определены методы:
+
+on(events, handler): регистрирует обработчик для одного или нескольких событий
+
+off(events, handler): удаляет ранее зарегистрированный обработчик для нескольких событий
+
+triggerHandler(event): вызывает обработчики для события
+-->
+
+
+<custom-element>
+    <p>то что оттрансклудил перед списком фреймворков</p>
+</custom-element>
+
+
+
+
+
+<script src="../libs/angular.min.js"></script>
+
+<script>
+
+    (function() {
+
+        var App = angular.module("App", []);
+
+        App.controller("CustomDirectiveController", function() {
+            this.items = [
+                "Angular",
+                "Polymer",
+                "Backbone"
+            ]
+        });
+
+        App.directive("customElement", function($timeout) {
+            return {
+                link: function(scope, element, attrs) {
+                    $timeout(function() {
+                        angular.element(element[0].querySelectorAll("li")).on('click', function() {
+                           console.log(123);
+                        });
+                    });
+                },
+                templateUrl: "./customElement.html",
+                transclude: true
+            }
+
+        });
+
+    })();
+
+</script>
+
+</body>
+</html>

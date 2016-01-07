@@ -1,0 +1,97 @@
+<!doctype html>
+<html ng-app="App">
+<head>
+    <meta charset="UTF-8">
+    <title>Document</title>
+</head>
+<body ng-controller="listNamesCtrl as listNames">
+
+<!--
+
+Привязка данных раскрывается через ряд директив:
+
+ng-bind: осуществляет привязку к свойству innerText html-элемента
+
+ng-bind-html: осуществляет привязку к свойству innerHTML html-элемента
+
+ng-bind-template: аналогична ng-bind за тем исключением, что позволяет установить привязку сразу к нскольким выражениям
+
+ng-model: создает двустороннюю привязку
+
+ng-non-bindable: определяет участок html-кода, в котором привязка не будет использоваться
+
+-->
+
+
+<div>
+    <h3>ng-bind</h3>
+    <p>Количество элементов: <span ng-bind="listNames.names.length"></span></p>
+    <p>Первый элемент: <span ng-bind="listNames.names[0].name"></span></p>
+    <button ng-click="listNames.names.push({name: 'Plushka'});">Добавить элемент</button>
+</div>
+
+
+<div>
+    <h3>ng-model</h3>
+    <input type="text" ng-model="ngModel">
+    {{ngModel}}
+
+    <p></p>
+    <input type="text" ng-model="listNames.names[0].name">
+    <p ng-bind="listNames.names[0].name"></p>
+</div>
+
+
+<div>
+    <h3>ng-bind-template</h3>
+    <p ng-bind-template="{{listNames.names[0].name}}: 1000000000000000000000$"></p>
+</div>
+
+
+<div>
+    <h3>ng-non-bindable</h3>
+    <p>{{1 + 2}}</p>
+    <p ng-non-bindable>{{1 + 2}}</p>
+</div>
+
+
+<div ng-controller="sanitizeController">
+    <h3>ng-bind-html</h3>
+    <p><textarea ng-model="htmlcode"></textarea></p>
+    <p ng-bind-html="htmlcode"></p>
+</div>
+
+
+
+
+<script src="../libs/angular.min.js"></script>
+<script src="../libs/angular-sanitize.min.js"></script>
+
+<script>
+
+    (function() {
+
+        var model = [
+            {name: "Max"},
+            {name: "Aliya"},
+            {name: "Anton"}
+        ];
+
+        var App = angular.module("App", ["ngSanitize"]);
+
+        App.controller("listNamesCtrl", function() {
+
+            this.names = model;
+
+        });
+
+        App.controller('sanitizeController', function($scope) {
+            $scope.htmlcode="Директива <b>ng-bind-html</b>";
+        });
+
+    })();
+
+</script>
+
+</body>
+</html>

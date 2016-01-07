@@ -1,0 +1,6 @@
+<h3>Name</h3>
+<input type="text" ng-model="view1.name">
+<button ng-click="view1.add(view1.name)">Добавить имя</button>
+<ul>
+    <li ng-repeat="item in view1.items track by $index">{{item}}</li>
+</ul>

@@ -1,0 +1,111 @@
+<!doctype html>
+<html ng-app="App">
+<head>
+    <meta charset="UTF-8">
+    <title>Document</title>
+</head>
+<body ng-controller="listNamesCtrl as listNames">
+
+<!--
+
+get(url, config): выполняет GET-запрос по определенному url
+
+post(url, data, config): выполняет POST-запрос к определенному url с отправкой объекта data
+
+delete(url, config): выполняет DELETE-запрос
+
+put(url, data, config): выполняет PUT-запрос, отправляя объект data по определенному url
+
+head(url, config): выполняет HEAD-запрос
+
+jsonp(url, config): выполняет JSONP-запрос по определенному url
+
+
+
+
+С помощью дополнительных методов мы можем определить более точную обработку ответа от сервера:
+
+success(fn): выполняет функцию fn при успешном завершении запроса
+
+error(fn): выполняет функцию fn, если при выполнении запроса возникли ошибки
+
+then(successFn, errorFn): регистрирует функцию как для успешного завершения запроса, так и для его неудачи
+
+Функция в обоих методах success(fn) и error(fn) может принимать до 4 параметров, которые содержат информацию об ответе:
+
+data: представляет данные, полученные от сервера
+
+status: статусный код ответа
+
+headers: возвращает функцию, получающую заголовки ответа
+
+config: объект для конфигурации запроса
+
+
+
+
+
+Параметр config является более сложным по функционалу. Он представляет объект, вкотором определены следующие параметры:
+
+data: данные, которые посылаются на сервер. Если не установить данный параметр, то отправляемые данные, например, методом post, будут автоматически сериализоваться в json
+
+headers: объект, представляющий набор заголовков
+
+method: HTTP-метод запроса
+
+params: устанавливает параметры строки URL
+
+timeout: устанавливает число миллисекунд действия запроса
+
+transformRequest: функция, которая обрабоатывает данные запроса перед его осуществлением
+
+transformResponse: функция, которая обрабатывает ответ от сервера после осуществления запроса
+
+url: устанавливает запрашиваемый URL
+
+withCredentials: если параметр равен true, то в запросе также отправляются аутентификационные куки
+
+xsrfHeaderNamexsrfCookieName: используется для отправки CSRF-токенов
+
+-->
+
+<p>data: {{listNames.data}}</p>
+<p>status: {{listNames.status}}</p>
+<p>headers: {{listNames.headers}}</p>
+<p>config: {{listNames.config}}</p>
+
+
+<script src="../libs/angular.min.js"></script>
+
+<script>
+
+    (function() {
+
+        var App = angular.module("App", []);
+
+        App.controller("listNamesCtrl", function($http) {
+
+            var self = this;
+
+            $http
+                .get("jsonNames.json", {
+                    timeout: 200
+                }) //$http({method:'GET', url:'setAnswer.php', params: {'id':answer.id,'up': false}}) - как альтернатива
+                .success(function(data, status, headers, config) {
+                    self.data = data;
+                    self.status = status;
+                    self.headers = headers;
+                    self.config = config;
+                })
+                .error(function(data, status, headers, config) {
+                    console.log("код ответа: " +status);
+                });
+
+        });
+
+    })();
+
+</script>
+
+</body>
+</html>

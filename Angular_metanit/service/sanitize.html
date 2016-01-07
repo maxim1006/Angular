@@ -1,0 +1,64 @@
+<!doctype html>
+<html ng-app="App">
+<head>
+    <meta charset="UTF-8">
+    <title>Document</title>
+</head>
+<body ng-controller="CustomDirectiveController as custom">
+
+
+<!--
+$sce: удаляет потенциально опасные элементы и атрибуты из кода html
+
+$sanitize: заменяет потенциально опасные символы эскейп-последовательностями
+-->
+
+
+<textarea ng-model="custom.html" cols="30" rows="10"></textarea>
+<p ng-bind-html="custom.html"></p>
+
+
+
+<div ng-controller="CustomDirectiveController1 as custom1">
+    <textarea ng-model="custom1.html" cols="30" rows="10"></textarea>
+    <p ng-bind-html="custom1.html"></p>
+    {{custom1.html}}
+</div>
+
+
+
+<script src="../libs/angular.min.js"></script>
+<script src="../libs/angular-sanitize.min.js"></script>
+
+<script>
+
+    (function() {
+
+        var App = angular.module("App", ["ngSanitize"]);
+
+        App.controller("CustomDirectiveController", function($scope, $sanitize) {
+            var self = this;
+
+            $scope.html = "<i>Начальный html</i>";
+
+            $scope.$watch("html", function(newHtml) {
+                $scope.html = $sanitize(newHtml);
+            });
+        });
+
+        App.controller("CustomDirectiveController1", function($scope, $sce) {
+            var self = this;
+
+            $scope.html = "<i>Начальный html</i>";
+
+            $scope.$watch("html", function(newHtml) {
+                $scope.html = $sce.trustAsHtml(newHtml);
+            });
+        });
+
+    })();
+
+</script>
+
+</body>
+</html>

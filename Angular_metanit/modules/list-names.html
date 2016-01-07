@@ -1,0 +1,40 @@
+<form action="" onsubmit="return false">
+    <input type="text" ng-model="name">
+    <button ng-click="listNames.addName(name)">Добавить имя</button>
+</form>
+
+<ul>
+    <li ng-repeat="item in listNames.names track by $index">
+
+        {{$index}} - $index; {{$first}} - $first; {{$last}} - $last; {{$middle}} - $middle; {{$even}} - $even; {{$odd}} - $odd <br />
+
+        {{item.name}}<br>
+        <a href="#" ng-click="listNames.showEditField($index);focusInput=true" onclick="return false" ng-hide="listNames['showEdit' + $index]">Редактировать</a>
+        <a href="#" ng-click="listNames.removeName($index);" onclick="return false" ng-hide="listNames['showEdit' + $index]">Удалить</a>
+
+        <form action="" onsubmit="return false">
+            <input type="text" ng-blur="listNames.onBlur($index, editName)" initial-value="{{item.name}}" ng-model="editName" ng-show="listNames['showEdit' + $index]" focus-auto="focusInput">
+            <button ng-show="listNames['showEdit' + $index]" ng-click="listNames.editName($index, editName)">Отредактировать</button>
+        </form>
+    </li>
+</ul>
+
+
+<!--
+
+При обходе массивов мы можем использовать ряд встроенных переменных AngularJS:
+
+$index: возвращает индекс элемента в массиве
+
+$first: возвращает true, если элемент является первым в массиве
+
+$last: возвращает true, если элемент является последним в массиве
+
+$middle: возвращает true, если элемент не является ни первым, ни последним в массиве
+
+$even: возвращает true, если элемент является четным
+
+$odd: возвращает true, если элемент является нечетным
+
+
+-->

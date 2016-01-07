@@ -1,0 +1,142 @@
+<!doctype html>
+<html ng-app="App">
+<head>
+    <meta charset="UTF-8">
+    <title>Document</title>
+</head>
+<body>
+
+
+<!--
+
+С помощью сервиса $route мы можем управлять текущим маршрутом. Сервис $route имеет несколько свойств и методов, позволяющих управлять маршрутом:
+
+current: возвращает объект, который содержит информацию о текущем маршруте
+
+reload(): перезагружает представление для текущего маршрута
+
+routes: возвращает коллекцию маршрутов, определенных через $routeProvider
+
+Чтобы зафиксировать переход от одного маршрута к другому, мы можем обрабатывать события, определенные в сервисе $route:
+
+$routeChangeStart: событие срабатывает перед изменением маршрута
+
+$routeChangeSuccess: событие срабатывает после изменения маршрута
+
+$routeUpdate: событие срабатывает при обновлении маршрута
+
+$routeChangeError: срабатывает, если маршрут не может быть изменен
+
+-->
+
+
+
+
+
+
+<nav><a href="#/view1">Получить имена</a> | <a href="#/view2">Получить возраст</a></nav>
+<ng-view></ng-view>
+
+
+
+
+
+<script src="../libs/angular.min.js"></script>
+<script src="../libs/angular-route.min.js"></script>
+
+<script>
+
+    (function() {
+
+        var App = angular.module('App', ["ngRoute"]);
+
+
+
+        App
+            .config(function($routeProvider){
+                $routeProvider.when('/view1', {
+                    templateUrl:'views/view1.html',
+                    controller:'View1Controller',
+                    controllerAs: 'view1'
+                });
+                $routeProvider.when('/view2', {
+                    templateUrl:'views/view2.html',
+                    controller:'View2Controller',
+                    controllerAs: 'view2'
+                });
+                $routeProvider.when("/view2/:id", {
+                    templateUrl: "views/view2.html",
+                    controller:'View2Controller',
+                    controllerAs: 'view2'
+                });
+                $routeProvider.when("/view2/:id/:data*", {
+                    templateUrl: "views/view2.html",
+                    controller:'View2Controller',
+                    controllerAs: 'view2'
+                });
+                $routeProvider.otherwise({redirectTo: '/'});
+            })
+            //run - срабатывает при инициализации модуля, $rootScope - объект, доступный для всего приложения
+            //вся эта байда нужна, чтобы удалить закешированный шаблон, так как браузер будет брать из кеша его при новой загрузке, здесь
+            //перезаписываем кеш для всех переходов
+            .run(function($rootScope, $templateCache) {
+                $rootScope.$on('$routeChangeStart', function(event, nextPath, currentPath) {
+                    if (typeof(currentPath) !== 'undefined'){
+                        $templateCache.remove(currentPath.templateUrl);
+                    }
+                });
+            });
+
+
+        App.controller("View1Controller", function($scope, $templateCache) {
+            this.items = ["Max", "Aliya", "Anton"];
+            this.add = function(name) {
+                this.items.push(name);
+            };
+
+            /*$scope.$on('$routeChangeStart', function(event, next, current) {
+                if (typeof(current) !== 'undefined'){
+                    $templateCache.remove(next.templateUrl);
+                    console.log(next);
+                    console.log(current);
+                }
+            });*/
+        });
+
+        App.controller("View2Controller", function($scope, $http, $location, $templateCache, $routeParams) {
+            var self = this;
+
+            this.items = ["28", "29", "29"];
+
+            this.add = function(age) {
+                if (!isNaN(parseFloat(age)) && isFinite(age)) {
+                    self.items.push(age);
+                }
+            };
+
+            //пример с передачей параметров  $routeParams - можно получить параметры маршрута.
+            /*$scope.$on("$routeChangeSuccess", function () {
+                var id = $routeParams["id"]
+                if(id!=='undefined'){
+
+                    $http({method:'GET', url:'getAnswer.php', params: {'id':id}}).
+                            success(function(data) {
+                                $scope.answer = data;
+                            });
+                }
+            });
+
+            $scope.save = function (answer, answerForm){
+                if(answerForm.$valid){
+                    $http.post("postAnswer.php", answer).success(function () {
+                        $location.path("question");
+                    });
+                }
+            };*/
+        });
+    })();
+
+</script>
+
+</body>
+</html>
