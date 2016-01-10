@@ -1,0 +1,77 @@
+<!doctype html>
+<!--нужно, чтобы запустить модуль, который запускается при загрузке страницы-->
+<html lang="ru" ng-app="app">
+<head>
+    <meta charset="UTF-8">
+    <title>Angular http</title>
+</head>
+<body ng-controller="MainController as mainCtrl">
+
+<!--angular mocks - штука, которая позволяет симулировать запросы на сервер-->
+
+
+<input type="text" ng-model="name.name">
+<button ng-click="mainCtrl.addName(name)">Add name</button>
+
+<ul>
+    <li ng-repeat="name in mainCtrl.names track by $index">{{name.name}}</li>
+</ul>
+
+
+<script src="../js/plugins/angular.min.js"></script>
+<script src="../js/plugins/angular-mocks.js"></script>
+<script>
+
+    (function() {
+
+        var app = angular.module('app', ["ngMockE2E"]);
+
+        app.run(function($httpBackend) {
+
+            var names = [
+                {name: 'Max'},
+                {name: 'Aliya'},
+                {name: 'Anton'}
+            ];
+
+            $httpBackend.whenGET("http://localhost:2000/names").respond(200, names);
+
+            $httpBackend.whenPOST("http://localhost:2000/names").respond(function(method, url, data) {
+                var result = JSON.parse(data);
+                names.push(result);
+                return [200, names];
+            });
+
+        });
+
+        app.controller("MainController", function($http) {
+            var self = this;
+
+            $http
+                .get("http://localhost:2000/names")
+                .success(function(data) {
+                    self.names = data;
+                })
+                .error(function(err) {
+                    console.log(err);
+                });
+
+            this.addName = function(name) {
+
+                if (name) {
+                    $http.post("http://localhost:2000/names", name)
+                            .success(function(data) {
+                                self.names = data;
+                            })
+                            .error(function(err) {
+                                console.log(err);
+                            });
+                }
+            };
+        });
+
+    })();
+
+</script>
+</body>
+</html>

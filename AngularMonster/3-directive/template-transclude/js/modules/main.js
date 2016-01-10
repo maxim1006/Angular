@@ -37,10 +37,10 @@ app.directive("custom", function() {
         link: function(scope, element, attrs, ctrl, transclude) {
             //тут все пихаю в скоуп, чтобы мог этим пользоваться в шаблоне для директивы.
             scope.family = family;
-
-            transclude(scope, function(clone, scope) {
-                console.log(clone);
-                console.log(scope);
+            //scope - это скоуп директивы, а clone - это то что написали в кастомную директиву + ангулар оборачивает это в спан, если внутренности кастомной директивы ни во что не обернуты
+            transclude(scope, function(clone) {
+                console.log("clone", clone);
+                console.log("scope", scope);
 
                 scope.name = "Anton";
 

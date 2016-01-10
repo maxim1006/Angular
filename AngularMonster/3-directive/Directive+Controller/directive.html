@@ -5,18 +5,11 @@
     <meta charset="UTF-8">
     <title>Angular</title>
 </head>
-<body>
-
-<custom>Директива элемент</custom>
+<body ng-controller="MainController as mainCtrl">
+Это name из контроллера {{name}}, он не будет меняться так как стоит scope: true
+<custom></custom>
 
 <script src="../../js/plugins/angular.min.js"></script>
 <script src="./js/modules/main.js"></script>
-
-<!--могу подгрузить шаблон через http-->
-
-<!--а могу просто подключить его со страницы-->
-<script type="text/ng-template" id="bookmarks.html">
-    <div>Inner transclude <ng-transclude></ng-transclude></div>
-</script>
 </body>
 </html>

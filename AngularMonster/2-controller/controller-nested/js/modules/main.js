@@ -1,14 +1,23 @@
 var app = angular.module('app', []);
 
 //nested controllers - с помощью них получаю доступ к методами и свойствам родительского контроллера
+//$scope.mainController = this - это тоже самое что и as в контроллере
 
 app.controller('myName', function() {
-    this.showName = function(name) {
-        console.log(name);
-        return "Max";
-    };
+    var self = this;
 
-    console.log(this);
+    this.showWife = false;
+    this.showBrother = false;
+
+    this.showName = function(name) {
+        if (name === "Aliya") {
+            self.showWife = true;
+            self.wifeName = "Aliya";
+        }  else if (name === "Anton") {
+            self.showBrother = true;
+            self.brotherName = "Anton";
+        }
+    };
 });
 
 app.controller('wifeName', function(myFactory) {

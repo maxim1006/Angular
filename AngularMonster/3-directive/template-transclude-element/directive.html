@@ -1,0 +1,45 @@
+<!doctype html>
+<!--нужно, чтобы запустить модуль, который запускается при загрузке страницы-->
+<html lang="ru" ng-app="app">
+<head>
+    <meta charset="UTF-8">
+    <title>Angular</title>
+</head>
+<body>
+
+<form action="" wrap-in="red">
+    <label for="">Enter email:</label>
+    <input type="text"><br>
+    <label for="">Enter password</label>
+    <input type="text"><br>
+    <button>Submit</button>
+</form>
+
+<script type="text/ng-template" id="red">
+    <div class="red"></div>
+</script>
+
+<script src="../../js/plugins/angular.min.js"></script>
+
+<script>
+    var App = angular.module("app", []);
+
+    App.directive("wrapIn", function($templateCache) {
+       return {
+           transclude: "element", //в отличие от transclude true в clone попадает не содержимое директивы, а полностью весь дом узел (всю директиву)
+           link: function(scope, element, attrs, ctrl, transclude) {
+               //обратим внимание, что шаблон указанный в text/ng-template автоматом попадет в кеш $templateCache
+               console.log($templateCache.info());
+               var template = $templateCache.get(attrs.wrapIn),
+                   templateElement = angular.element(template);
+
+               transclude(scope, function(clone) {
+                   element.after(templateElement.append(clone));
+               });
+           }
+       };
+    });
+</script>
+
+</body>
+</html>

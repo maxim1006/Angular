@@ -10,10 +10,12 @@
 <div ng-controller="myName as my">
 
     <div ng-controller="wifeName as wife">
-        <button ng-click="my.showName(wife.name + ' ' + wife.myFactory.can)">Show name</button>
+        <button ng-click="my.showName(wife.name)">Show name</button>
+        <span ng-show="my.showWife">{{my.wifeName}}</span>
     </div>
     <div ng-controller="brotherName as brother">
-        <button ng-click="my.showName(brother.name + ' ' + brother.myFactory.can)">Show name</button>
+        <button ng-click="my.showName(brother.name)">Show name</button>
+        <span ng-show="my.showBrother">{{my.brotherName}}</span>
     </div>
 
 </div>

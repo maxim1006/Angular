@@ -1,0 +1,24 @@
+<!doctype html>
+<!--нужно, чтобы запустить модуль, который запускается при загрузке страницы-->
+<html lang="ru" ng-app="app">
+<head>
+    <meta charset="UTF-8">
+    <title>Angular</title>
+</head>
+<body ng-controller="MainController as mainCtrl">
+name из контроллера (@) {{name}}<br>
+styles из контроллера (=) {{color}}<br>
+color из контроллера (=) {{styles}}<br>
+<button ng-click="reverse();autofocus=true;">Reverse (&)</button><br>
+<!--
+
+атрибут name="{{name}}" - только для ридонли (@)
+атрибут color="color" - для двустороннего биндинга (=)
+
+-->
+<custom name="{{name}}" styles="styles" color="color" reverse="reverse()"></custom>
+
+<script src="../../js/plugins/angular.min.js"></script>
+<script src="./js/modules/main.js"></script>
+</body>
+</html>
