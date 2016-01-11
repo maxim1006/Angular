@@ -7,15 +7,19 @@
     <link rel="stylesheet" href="css/css.css">
     <link rel="stylesheet" href="css/bootstrap.min.css">
 </head>
-<body>
+<body ng-app="app">
 
 
 
-    <div ng-app>
+    <div ng-controller="TestController as testCtrl">
 
-        <input type="text" ng-model="hello">
-        <input type="text" ng-model="hello">
-        {{hello}}
+        <button ng-click="testCtrl.up()">Increase</button> {{testCtrl.a}} {{testFactory.a}}
+
+    </div>
+
+    <div ng-controller="TestController1 as testCtrl1">
+
+        <button ng-click="testCtrl1.up()">Increase</button> {{testCtrl1.a}} {{testFactory.a}}
 
     </div>
 
@@ -23,5 +27,37 @@
 
 
 <script src="../js/plugins/angular.min.js"></script>
+
+    <script>
+        (function() {
+
+            var app = angular.module("app", []);
+
+            app.controller("TestController", function($scope, testFactory) {
+                this.a = testFactory.a;
+                $scope.testFactory = testFactory; //важно, чтобы сервис заработал поместить его в скоуп
+                this.up = function() {
+                    this.a++;
+                    $scope.testFactory.a++;
+                };
+            });
+
+            app.controller("TestController1", function($scope, testFactory) {
+                this.a = testFactory.a;
+                $scope.testFactory = testFactory;
+                this.up = function() {
+                    this.a++;
+                    $scope.testFactory.a++;
+                };
+            });
+
+            app.factory("testFactory", function() {
+               return {
+                   a: 1
+               }
+            });
+
+        })();
+    </script>
 </body>
 </html>
