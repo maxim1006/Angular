@@ -1,0 +1,84 @@
+<!doctype html>
+<html ng-app="app">
+<head>
+    <meta charset="UTF-8">
+    <title>Document</title>
+    <link rel="stylesheet" href="css/css.css">
+</head>
+<body ng-controller="ComponentsController as componentsCtrl">
+
+<form action="/" onsubmit="return false;">
+    <input type="text" ng-model="name">
+    <button ng-click="componentsCtrl.addComponent(name)">Add component</button>
+</form>
+
+<ul ng-cloak>
+    <li ng-repeat="componentsCtrlName in componentsCtrl.names  | filter:name | orderBy:name track by $index"><a href="./components/{{componentsCtrlName}}/index.html">{{componentsCtrlName}}</a></li>
+</ul>
+
+<p class="warning warning_repeat" ng-show="componentsCtrl.repeatWarning" ng-cloak>
+    Компонент уже существует, введите другой
+</p>
+
+<p class="warning warning_created" ng-show="componentsCtrl.createdWarning" ng-cloak>
+    Компонент создан
+</p>
+
+<script src="libs/angular.min.js"></script>
+<script>
+
+    (function() {
+
+        var app = angular.module('app', []);
+
+        app.controller("ComponentsController", function($http, $timeout) {
+            var self = this;
+
+            $http
+                .get("http://localhost:2000/names")
+                .success(function(data) {
+                    self.names = data;
+                })
+                .error(function(err) {
+                    console.log(err);
+                });
+
+            this.addComponent = function(name) {
+
+                if (name && !(~self.names.indexOf(name))) {
+
+                    $http.post("http://localhost:2000/names", {name: name})
+                        .success(function(data) {
+                            self.names = data;
+
+                            self.createdWarning = true;
+                            self.repeatWarning = false;
+
+                            console.log(data);
+
+                            $timeout(function() {
+                                self.createdWarning = false;
+                            }, 3000);
+                        })
+                        .error(function(err) {
+                            console.log('http://localhost:2000/names post',err);
+                        });
+
+                } else {
+                    self.repeatWarning = true;
+                    self.createdWarning = false;
+
+                    $timeout(function() {
+                        self.repeatWarning = false;
+                    }, 3000);
+                }
+
+            };
+        });
+
+    })();
+
+</script>
+
+</body>
+</html>
