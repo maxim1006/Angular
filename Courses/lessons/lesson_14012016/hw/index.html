@@ -1,0 +1,152 @@
+<!doctype html>
+<html ng-app="app">
+<head>
+    <meta charset="UTF-8">
+    <title>Directives</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous">
+
+    <style>
+        .mail-inbox__list {
+            list-style-type: none;
+        }
+        
+        .mail-inbox__link {
+            display: block;
+            font-size: 0;
+        }
+
+        .mail-inbox__link:hover {
+            font-size: 0;
+            background: #f2f3f3;
+        }
+        
+        .mail-inbox__block {
+            display: inline-block;
+            vertical-align: middle;
+            font-size: 16px;
+        }
+
+        .mail-inbox__block+.mail-inbox__block {
+            margin-left: 20px;
+        }
+    </style>
+
+</head>
+<body>
+
+<nav class="navbar navbar-inverse navbar-static-top">
+    <div class="container">
+        <ul class="nav navbar-nav">
+            <li class="active"><a href="#/inbox">Входящие</a></li>
+            <li><a href="#/outbox">Исходящие</a></li>
+            <li><a href="#">Отправленные</a></li>
+            <li><a href="#">Корзина</a></li>
+            <li><a href="#">Спам</a></li>
+            <li><a href="#">Сохраненные</a></li>
+        </ul>
+    </div>
+</nav>
+
+<ng-view></ng-view>
+
+
+<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.5/angular.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.5/angular-route.js"></script>
+
+<script>
+
+    (function() {
+
+        angular.module("app", ["ngRoute"]);
+
+        angular.module("app")
+                .directive("mailInbox", function() {
+                   return {
+                       templateUrl: "mailInbox-template.html",
+                       controller: function(mailInboxService) {
+                           var self = this;
+
+                           mailInboxService.then(function(data) {
+                               self.items = data;
+                           });
+                       },
+                       controllerAs: "mailInboxCtrl"
+                   };
+                })
+                .directive("mailInboxContent", function() {
+                    return {
+                        templateUrl: "mailInbox-content-template.html",
+                        controller: function($scope) {
+
+                            $scope.$on('$routeChangeStart', function(event, next, current) {
+                                if (typeof(current) !== 'undefined'){
+                                    console.log(next);
+                                    console.log(current);
+                                }
+                            })
+
+                        },
+                        controllerAs: "mailInboxContentCtrl"
+                    };
+                })
+                .directive("mailOutbox", function() {
+                    return {
+                        templateUrl: "mailOutbox-template.html",
+                        controller: function(mailOutboxService) {
+
+                            var self = this;
+
+                            mailOutboxService.then(function(data) {
+                                self.items = data;
+                            });
+                        },
+                        controllerAs: "mailOutboxCtrl"
+                    };
+                })
+                .factory("mailInboxService", function($http, $q) {
+                    var promise = $q.defer();
+
+                    $http
+                        .get("inbox.json")
+                        .success(function(data, status, headers, config) {
+                            promise.resolve(data);
+                        })
+                        .error(function(data, status, headers, config) {
+                            promise.reject(status);
+                        });
+
+                    return promise.promise
+                })
+                .factory("mailOutboxService", function($http, $q) {
+                    var promise = $q.defer();
+
+                    $http
+                        .get("outbox.json")
+                        .success(function(data, status, headers, config) {
+                            promise.resolve(data);
+                        })
+                        .error(function(data, status, headers, config) {
+                            promise.reject(status);
+                        });
+
+                    return promise.promise
+                })
+                .config(function($routeProvider){
+                    $routeProvider.when('/inbox', {
+                        template: "<mail-inbox></mail-inbox>"
+                    });
+                    $routeProvider.when('/inbox-content/:id', {
+                        template: "<mail-inbox-content></mail-inbox-content>"
+                    });
+                    $routeProvider.when('/outbox', {
+                        template: "<mail-outbox></mail-outbox>"
+                    });
+                    //$routeProvider.otherwise({redirectTo: '/inbox'});
+                });
+
+    })();
+
+</script>
+
+</body>
+</html>

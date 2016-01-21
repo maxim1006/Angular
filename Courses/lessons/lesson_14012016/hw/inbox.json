@@ -1,0 +1,20 @@
+[
+    {
+        "email": "example.com",
+        "theme": "Default theme",
+        "msg": "Default message",
+        "time": "21.01.2016"
+    },
+    {
+        "email": "example.com",
+        "theme": "Default theme",
+        "msg": "Default message",
+        "time": "21.01.2016"
+    },
+    {
+        "email": "example.com",
+        "theme": "Default theme",
+        "msg": "Default message",
+        "time": "21.01.2016"
+    }
+]

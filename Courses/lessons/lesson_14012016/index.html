@@ -1,0 +1,91 @@
+<!doctype html>
+<html ng-app="app">
+<head>
+    <meta charset="UTF-8">
+    <title>Общая инфа</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.5/angular.js"></script>
+</head>
+<body>
+
+<custom-dir></custom-dir>
+
+<h2 style="margin-top:50px;">Виды директив</h2>
+<input type="text" ng-model="name"><br>
+ng-bind <span ng-bind="name"></span><br />
+ng:bind <span ng:bind="name"></span><br />
+ng_bind <span ng_bind="name"></span><br />
+data-ng-bind <span data-ng-bind="name"></span><br />
+x-ng-bind <span x-ng-bind="name"></span><br />
+
+<!--
+    Когда загружается страница с ng-app, то ангулар ищет этот элемент на котором ng-app и делает его $rootElement, а также создает для него $rootScope
+
+    в 1.3 - отказались от $scope и перешли на this
+    в 1.5 - директива + компонент
+
+    Директивы в ангуларе 70%
+    - Директива приложения `ng-app`
+    - Директивы для работы с событиями (`ng-click`, `ng-change` ...)
+    - Директивы стандартных атрибутов (`ng-class`, `ng-href`, `ng-src` )
+    - Почти любой HTML тег имеет свою директиву (`<a>` `<form>` `<input>`)
+    - Директивы логики шаблонизатора (`ng-if`, `ng-repeat`, `ng-include`)
+    - Специальные директивы (`ng-controller`, `ng-model`, `ng-transclude`)
+
+    Директива может использоваться:
+    <input type="text" ng-model="name"><br>
+    <span ng-bind="name"></span><br />
+    <span ng:bind="name"></span><br />
+    <span ng_bind="name"></span><br />
+    <span data-ng-bind="name"></span><br />
+    <span x-ng-bind="name"></span><br />
+
+    Директиву назваю с маленькой буквы userCards
+    Класс контроллер называю с большой MainController
+
+    исходный код
+    https://github.com/angular/angular.js/tree/master/src/ng
+-->
+
+<script>
+    (function() {
+
+        angular.module("app", []);
+
+        angular.module("app").run(function($rootElement, $rootScope) {
+            console.log($rootScope);
+            console.log($rootElement);
+        });
+
+
+
+    })();
+</script>
+
+<script>
+    (function() {
+
+        //Чтобы получить модуль который уже инициировал нужно без массива его записать,
+        //в больших приложениях не делают app, чтобы не запутаться
+        /*angular.module("app")
+            .controller("MainController", function() {
+                this.x = 10;
+            });*/
+
+        //так как контроллер отельно лучше не использовать использую его в директиве
+        angular.module("app")
+            .directive("customDir", function() {
+                return {
+                    template: "{{main.x}}",
+                    controller: function() {
+                        this.x = 10;
+                    },
+                    controllerAs: "main"
+                }
+            });
+
+    })();
+</script>
+
+
+</body>
+</html>

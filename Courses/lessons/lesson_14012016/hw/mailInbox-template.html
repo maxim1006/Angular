@@ -1,0 +1,21 @@
+<ul class="mail-inbox__list">
+    <li ng-repeat="item in mailInboxCtrl.items track by $index" class="mail-inbox__item">
+        <a ng-href="#/inboxcontent/{{$index}}" class="mail-inbox__link">
+            <div class="mail-inbox__block mail-inbox__block_input">
+                <input type="checkbox" class="mail-inbox__input">
+            </div>
+            <div class="mail-inbox__block mail-inbox__block_email">
+                {{item.email}}
+            </div>
+            <div class="mail-inbox__block mail-inbox__block_theme">
+                {{item.theme}}
+            </div>
+            <div class="mail-inbox__block mail-inbox__block_msg">
+                {{item.msg}}
+            </div>
+            <div class="mail-inbox__block mail-inbox__block_time">
+                {{item.time}}
+            </div>
+        </a>
+    </li>
+</ul>
