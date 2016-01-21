@@ -1,0 +1,44 @@
+<!doctype html>
+<!--нужно, чтобы запустить модуль, который запускается при загрузке страницы-->
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <title>Angular</title>
+    <link rel="stylesheet" href="css/css.css">
+    <link rel="stylesheet" href="css/bootstrap.min.css">
+</head>
+<body ng-app="app">
+
+<a href="#/">Home</a> <a href="#/posts">Posts</a>
+<ng-view></ng-view>
+
+
+<script src="../js/plugins/angular.min.js"></script>
+<script src="../js/plugins/angular-route.min.js"></script>
+
+    <script>
+        (function() {
+
+            var app = angular.module('app', ["ngRoute"]);
+
+            app.controller("HomeCtrl", function($scope) {
+               $scope.hi = "Hello";
+            });
+
+            app.config(function($routeProvider) {
+                $routeProvider
+                .when("/", {
+                    //template: "<h1>Index page</h1>"
+                    templateUrl: "home.html",
+                    controller: "HomeCtrl as home"
+                })
+                .when("/posts", {
+                    template: "<h1>Posts page</h1>"
+                });
+
+            })
+
+        })();
+    </script>
+</body>
+</html>

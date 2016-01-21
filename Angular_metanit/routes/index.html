@@ -28,12 +28,6 @@ $routeUpdate: событие срабатывает при обновлении 
 $routeChangeError: срабатывает, если маршрут не может быть изменен
 
 -->
-
-
-
-
-
-
 <nav><a href="#/view1">Получить имена</a> | <a href="#/view2">Получить возраст</a></nav>
 <ng-view></ng-view>
 
@@ -92,7 +86,9 @@ $routeChangeError: срабатывает, если маршрут не може
         App.controller("View1Controller", function($scope, $templateCache) {
             this.items = ["Max", "Aliya", "Anton"];
             this.add = function(name) {
-                this.items.push(name);
+                if (name) {
+                    this.items.push(name);
+                }
             };
 
             /*$scope.$on('$routeChangeStart', function(event, next, current) {
