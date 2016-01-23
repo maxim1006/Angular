@@ -13,11 +13,11 @@
 </form>
 
 <ul ng-cloak>
-    <li ng-repeat="componentsCtrlName in componentsCtrl.names  | filter:name | orderBy:name track by $index"><a href="./components/{{componentsCtrlName}}/index.html">{{componentsCtrlName}}</a></li>
+    <li ng-repeat="componentsCtrlName in componentsCtrl.names  | filter:name | orderBy:name track by $index"><a href="./components/{{componentsCtrlName.name}}/index.html">{{componentsCtrlName.name}}</a> <time>{{componentsCtrlName.date}}</time></li>
 </ul>
 
 <p class="warning warning_repeat" ng-show="componentsCtrl.repeatWarning" ng-cloak>
-    Компонент уже существует, введите другой
+    Компонент уже существует или имя некорректно
 </p>
 
 <p class="warning warning_created" ng-show="componentsCtrl.createdWarning" ng-cloak>
@@ -31,7 +31,7 @@
 
         var app = angular.module('app', []);
 
-        app.controller("ComponentsController", function($http, $timeout) {
+        app.controller("ComponentsController", function($http, $timeout, validate) {
             var self = this;
 
             $http
@@ -44,8 +44,12 @@
                 });
 
             this.addComponent = function(name) {
+                console.log(name);
+                console.log(self.names);
 
-                if (name && !(~self.names.indexOf(name))) {
+                if (name && validate.validateName(self.names, name)) {
+
+                    console.log(name);
 
                     $http.post("http://localhost:2000/names", {name: name})
                         .success(function(data) {
@@ -74,6 +78,23 @@
                 }
 
             };
+        });
+
+        app.factory("validate", function() {
+
+            return {
+                validateName: function(names, name) {
+
+                    for (var i = 0; i < names.length; i++) {
+                        if (names[i].name === name) {
+                            return false;
+                        }
+                    }
+
+                    return true;
+                }
+            };
+
         });
 
     })();

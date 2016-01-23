@@ -8,52 +8,76 @@ let koa = require('koa');
 let Router = require('koa-router');
 let cors = require('kcors');
 let bodyParser = require('koa-bodyparser');
+let moment = require("moment");
+let co = require("co");
 
 let app = koa();
 let router = new Router();
-
-let names = [];
-
-
-
-glob("./components/**/*.html", function (err, files) {
-    if (err) throw err;
-
-    files.forEach(function(el, idx, arr) {
-        var splittedPath = el.split('/');
-        names.push(splittedPath[splittedPath.length - 2]);
-    });
-
-    //console.log(names);
-});
 
 
 
 router
     .get('/names', function*(next) {
-        this.body = names;
+        this.body = yield* datify(yield* getNames());
     })
     .post('/names', function*(next) {
-        var name = this.request.body.name;
+        yield* createComponent(this.request.body.name);
 
-        //console.log('before createComponent', +new Date);
-        this.body = yield* createComponent(name);
-        //console.log('after createComponent', +new Date);
+        this.body = yield* datify(yield* getNames());
     });
 
 
 
 /*Helpers*/
+function* getNames() {
+
+    var names = [];
+
+    return yield new Promise((res, rej) => {
+        glob("./components/**/*.html", function (err, files) {
+            if (err) rej(err);
+
+            files.forEach(function(el, idx, arr) {
+                var splittedPath = el.split('/');
+
+                names.push({
+                    name: splittedPath[splittedPath.length - 2]
+                });
+            });
+
+            res(names);
+
+        });
+    });
+}
+
+
+function* datify(names) {
+    var arr = [];
+
+    for (let i = 0; i < names.length; i++) {
+        arr.push({
+            name: names[i].name,
+            date: yield* getDate(names[i].name)
+        });
+    }
+
+    return arr;
+}
+
+
+function* getDate(name) {
+    let date = yield fs.stat(path.join("./components/", name));
+
+    return moment(+date.birthtime).format("D/MM/YY/H:m:s");
+}
+
+
 function* createComponent(name) {
     yield fs.mkdir(path.join("./components/", name));
-    //console.log('folder created yield', +new Date);
     yield fs.writeFile(path.join("./components/", name, "index.html"), getIndexFileTemplate(name));
-    //console.log('file created yield', +new Date);
-
-    names.push(name);
-
-    return names;
 }
+
 
 function getIndexFileTemplate(name) {
     return `
