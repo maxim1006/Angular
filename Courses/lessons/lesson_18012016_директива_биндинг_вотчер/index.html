@@ -10,7 +10,8 @@
 
 <!--current-user - это то что передали, например из какого-то контроллера в директиву custom-directive, а значение могу получить уже внутри link-->
 <!--на смой директиве не могу использовать main.eq, типо current-user="main.eq" будет undefined-->
-<custom-directive current-user="123" user-equal-param="456"></custom-directive>
+
+<custom-directive current-user="798" user-equal-param="456"></custom-directive>
 
 <script>
     (function() {
@@ -26,37 +27,54 @@
 //                        controller: ["testFactory", function(testFactory) {
 //                            console.log(testFactory);
 //                        }],
-                        controller: function(testFactory, $scope) {
-                            console.log($scope);
-                            console.log(testFactory);
+                        controller: function(testFactory) {
+                            //console.log(testFactory);
                         },
-                        template: "{{main.eq}} 123",
-                        link: function(scope, el, attrs) {
+                        template: "{{user}} 123",
+                        link: function(scope, el, attrs, testFactory) {
+
+                            console.log("testFactory from link", testFactory);
 
                             //scope - параметр, который передается в link
                             //$scope - сервис, который используется где-то, не использовать
                             //так как подключил jQuery, то $ будет jQuery иначе jQuery light
-                            console.log($(el));
-
-                            //тут могу использовать scope.user
-                            console.log(scope.user);
-                            console.log(scope.userEqualParam);
-                            console.log(scope.user1);
-                            console.log(scope.user2());
-
-                            //пример прослеживания изменения атрибута
-                            /*el.on("click", function() {
-                                el.attr('color', 'blue');
-                                console.log(el.attr('color'));
+                            //console.log($(el));
+                            //scope.$watch('user', function(newValue, oldValue) {
+                                //или так
+                            scope.$watch(attrs["current-user"], function(newValue, oldValue) {
+                                console.log(newValue);
+                                console.log(oldValue);
                             });
 
-                            attrs.$observe("color", function(val) {
+                            //тут могу использовать scope.user
+                            /*console.log(scope.user);
+                            console.log(scope.userEqualParam);
+                            console.log(scope.user1);
+                            console.log(scope.user2());*/
+
+                            //пример прослеживания изменения атрибута
+                            $(el).on("click", function() {
+                                scope.$apply(function(){
+                                    scope.user = 'blue';
+                                    scope.userEqualParam = 'blue';
+
+                                    console.log(scope.user);
+                                });
+
+                                //либо так
+                                /*scope.user = 'blue';
+                                scope.$apply();*/
+                            });
+
+                            /*attrs.$observe("color", function(val) {
                                 console.log("val", val);
                             })*/
+
+
                         },
-                        controller: function() {
-                            this.eq = "Пример с равно";
-                            this.equal = "Пример с равно, когда совпадает имя";
+                        controller: function($scope) {
+                            this.model = "Model";
+                            //console.log("scope from controller",$scope);
                         },
                         controllerAs: "main",
                         //scope: false //директива не создает своего скоупа, а использует скоуп контроллера (по умолчанию)
