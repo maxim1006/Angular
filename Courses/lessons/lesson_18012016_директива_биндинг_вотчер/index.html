@@ -8,10 +8,17 @@
 </head>
 <body>
 
+<!-- могу использовать контроллер в 2х разных местах
+<div ng-controller="ctrl as c">{{c.a}}</div>
+
+<p>lorem</p>
+
+<div ng-controller="ctrl as c">{{c.a}}</div>-->
+
 <!--current-user - это то что передали, например из какого-то контроллера в директиву custom-directive, а значение могу получить уже внутри link-->
 <!--на смой директиве не могу использовать main.eq, типо current-user="main.eq" будет undefined-->
 
-<custom-directive current-user="798" user-equal-param="456"></custom-directive>
+<custom-directive current-user="123" user-equal-param="456"></custom-directive>
 
 <script>
     (function() {
@@ -21,17 +28,20 @@
         //provider, factory, service ничем практически не отличается, использую factory
 
         angular.module("app")
-                .directive("customDirective", function() {
+                .directive("customDirective", function(testFactory) {
                     return {
 //                        такой синтаксис нужен чтобы минифакатор не убил ничего
 //                        controller: ["testFactory", function(testFactory) {
 //                            console.log(testFactory);
 //                        }],
-                        controller: function(testFactory) {
-                            //console.log(testFactory);
+                        controller: function() {
+                            console.log("testFactory from controller", testFactory);
+
+                            this.a = 123;
+                            this.b = 456;
                         },
-                        template: "{{user}} 123",
-                        link: function(scope, el, attrs, testFactory) {
+                        template: "{{user}}",
+                        link: function(scope, el, attrs) {
 
                             console.log("testFactory from link", testFactory);
 
@@ -39,12 +49,17 @@
                             //$scope - сервис, который используется где-то, не использовать
                             //так как подключил jQuery, то $ будет jQuery иначе jQuery light
                             //console.log($(el));
-                            //scope.$watch('user', function(newValue, oldValue) {
-                                //или так
-                            scope.$watch(attrs["current-user"], function(newValue, oldValue) {
-                                console.log(newValue);
-                                console.log(oldValue);
+                            scope.$watch('user', function(newValue, oldValue) {
+                                //или так если меняю извне
+                            //scope.$watch(attrs["currentUser"], function(newValue, oldValue) {
+                                console.log("from $watch", newValue);
+                                console.log("from $watch", oldValue);
                             });
+
+                            /*attrs.$observe("current-user", function(newValue, oldValue) {
+                                console.log("from $observe", newValue);
+                                console.log("from $observe", oldValue);
+                            });*/
 
                             //тут могу использовать scope.user
                             /*console.log(scope.user);
@@ -58,7 +73,7 @@
                                     scope.user = 'blue';
                                     scope.userEqualParam = 'blue';
 
-                                    console.log(scope.user);
+                                    //console.log(scope.user);
                                 });
 
                                 //либо так
@@ -71,10 +86,6 @@
                             })*/
 
 
-                        },
-                        controller: function($scope) {
-                            this.model = "Model";
-                            //console.log("scope from controller",$scope);
                         },
                         controllerAs: "main",
                         //scope: false //директива не создает своего скоупа, а использует скоуп контроллера (по умолчанию)
@@ -92,7 +103,7 @@
         angular.module("app")
             .factory("testFactory", function($window) {
 //                console.log($window);
-//                console.log("this", this);
+                console.log("this", this);
                 this.a = 3;
                 return {
                     a: this.a
