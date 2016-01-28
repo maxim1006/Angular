@@ -1,0 +1,80 @@
+<!doctype html>
+<html ng-app="app">
+<head>
+    <meta charset="UTF-8">
+    <title>Общая инфа</title>
+    <script src="https://code.jquery.com/jquery-2.2.0.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.5/angular.js"></script>
+</head>
+<body>
+
+
+<input type="text" ng-model="outsideData">
+<currency-calc user="outsideData" uservalue="{{outsideData}}" call="function(name) {return 'Hello' + name}"></currency-calc>
+
+<script>
+
+    (function() {
+
+        angular.module("app", []);
+
+        /**Factory**/
+        angular.module("app")
+            .factory("getCurrenyFactory", function($http) {
+                var get = function() {
+                    return $http.get("currencyData.json");
+                };
+
+                return {
+                    get: get
+                }
+            });
+
+        /**Directive**/
+        angular.module("app")
+            .directive("currencyCalc", function($q, $timeout, getCurrenyFactory) {
+                    return {
+                        scope: {
+                            user: "=", //двойное связывание,
+                            uservalue: "@", //просто передача значения извне внутрь, но не в обратную сторону
+                            call: "&" //коллбек
+                        },
+                        link: function(scope, elem, attrs, ctrl) {
+                            console.log(JSON.stringify(ctrl));
+                        },
+                        controller: function($scope) {
+                            var self = this;
+                            //можно вотчером
+                            /*$scope.$watch("currencyCalcCtrl.inputText", function(newVal, oldVal) {
+                                self.data = self.inputText;
+                                console.log(123);
+                            });*/
+
+                            //а лучше через функцию
+                            this.getText = function() {
+                                return self.inputText;
+                            };
+
+                        },
+                        controllerAs: "currencyCalcCtrl",
+                        template: `
+                        <p>Поле для двойного датабиндинга</p>
+                        <input type='text' ng-model='user'>
+
+                        <p>Поле для @ - биндинга внутрь</p>
+                        <input type='text' ng-model='uservalue'>
+
+                        <p>Поле для & - колбека</p>{{call({name: user})}}
+
+                        <p>Пример обновления нового свойства из существующего</p>{{currencyCalcCtrl.getText()}}
+                        <input type='text' ng-model='currencyCalcCtrl.inputText'>`
+                    };
+            });
+
+    })();
+
+</script>
+
+
+</body>
+</html>
