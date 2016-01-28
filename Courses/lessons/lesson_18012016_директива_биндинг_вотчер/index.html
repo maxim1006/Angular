@@ -34,16 +34,18 @@
 //                        controller: ["testFactory", function(testFactory) {
 //                            console.log(testFactory);
 //                        }],
-                        controller: function() {
+                        controller: function($scope) {
+                            console.log("$scope from controller", $scope);
                             console.log("testFactory from controller", testFactory);
 
-                            this.a = 123;
-                            this.b = 456;
+                            this.a = $scope.user;
+                            this.b = $scope.userEqualParam;
                         },
-                        template: "{{user}}",
+                        template: "{{user}} {{main.a}} {{main.b}} <input type='text' ng-model='main.a'>",
                         link: function(scope, el, attrs) {
 
-                            console.log("testFactory from link", testFactory);
+                            //console.log("testFactory from link", testFactory);
+                            console.log("scope from directive", scope);
 
                             //scope - параметр, который передается в link
                             //$scope - сервис, который используется где-то, не использовать
@@ -55,11 +57,6 @@
                                 console.log("from $watch", newValue);
                                 console.log("from $watch", oldValue);
                             });
-
-                            /*attrs.$observe("current-user", function(newValue, oldValue) {
-                                console.log("from $observe", newValue);
-                                console.log("from $observe", oldValue);
-                            });*/
 
                             //тут могу использовать scope.user
                             /*console.log(scope.user);

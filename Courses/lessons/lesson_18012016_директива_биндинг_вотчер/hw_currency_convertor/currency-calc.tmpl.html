@@ -1,0 +1,19 @@
+<div ng-hide="currencyCalcCtrl.show">
+    Loading...
+</div>
+
+<div class="currency-calc" ng-show="currencyCalcCtrl.show">
+    <div class="currency-calc__item">
+        <p>Enter value</p>
+        <input type="number" ng-model="currencyCalcCtrl.value">
+    </div>
+    <div class="currency-calc__item">
+        <p>Choose currency</p>
+        <select ng-model="currencyCalcCtrl.currentCurrency" ng-options="currency.name for currency in currencyCalcCtrl.currencies">
+            <option value="">---Please select---</option>
+        </select>
+        {{currencyCalcCtrl.currentCurrency.rate}}
+    </div>
+
+    {{currencyCalcCtrl.value * currencyCalcCtrl.currentCurrency.rate || 0}}
+</div>

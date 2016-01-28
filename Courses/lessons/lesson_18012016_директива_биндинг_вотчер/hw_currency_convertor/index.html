@@ -1,0 +1,70 @@
+<!doctype html>
+<html ng-app="app">
+<head>
+    <meta charset="UTF-8">
+    <title>Общая инфа</title>
+    <script src="https://code.jquery.com/jquery-2.2.0.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.5/angular.js"></script>
+</head>
+<body>
+
+<currency-calc></currency-calc>
+
+<script>
+
+    (function() {
+
+        angular.module("app", []);
+
+        /**Factory**/
+        angular.module("app")
+            .factory("getCurrenyFactory", function($http) {
+                var get = function() {
+                    return $http.get("currencyData.json");
+                };
+
+                return {
+                    get: get
+                }
+            });
+
+        /**Directive**/
+        angular.module("app")
+            .directive("currencyCalc", function($q, $timeout, getCurrenyFactory) {
+                    return {
+                        scope: {
+                            user: "="
+                        },
+                        link: function(scope, elem, attrs, ctrl) {
+                            console.log(JSON.stringify(ctrl));
+                        },
+                        controller: function($scope) {
+                            var self = this;
+
+                            getCurrenyFactory.get().then(function(data) {
+                                self.currencies = data.data;
+                            });
+
+                            var deferred = $q.defer();
+
+                            $timeout(function() {
+                                deferred.resolve(true)
+                            }, 2000);
+
+                            deferred.promise.then(function(data) {
+                                self.show = data;
+                            });
+
+                        },
+                        controllerAs: "currencyCalcCtrl",
+                        templateUrl: "currency-calc.tmpl.html"
+                    };
+            });
+
+    })();
+
+</script>
+
+
+</body>
+</html>

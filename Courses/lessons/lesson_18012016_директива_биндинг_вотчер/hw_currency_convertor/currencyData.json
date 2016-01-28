@@ -1,0 +1,14 @@
+[
+    {
+        "name": "usd",
+        "rate": 80
+    },
+    {
+        "name": "euro",
+        "rate": 90
+    },
+    {
+        "name": "pound",
+        "rate": 100
+    }
+]
