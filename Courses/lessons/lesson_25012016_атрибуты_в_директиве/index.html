@@ -22,7 +22,7 @@
         angular.module("app")
             .factory("getCurrenyFactory", function($http) {
                 var get = function() {
-                    return $http.get("currencyData.json");
+                    return $http.get("currencyData.json")
                 };
 
                 return {
