@@ -9,8 +9,35 @@
 <body>
 
 
+<!--
+function MyService(){
+
+}
+MyService.$inject = ['$http'];
+
+angular.module('myapp')
+.service('MyService', MyService);
+
+так могу делать инжекты, помимо записи в параметры
+angular.module('myapp')
+.service('MyService', function($http) {});
+
+так могу делать полную, форму записи
+angular.module('myapp')
+.service('MyService',["http", function($http) {}]);
+
+
+Посмотреть
+ngResorce
+Restangular
+-->
+
+<div outer-directive>
+
 <input type="text" ng-model="outsideData">
-<currency-calc user="outsideData" uservalue="{{outsideData}}" call="function(name) {return 'Hello' + name}"></currency-calc>
+<currency-calc userName="outsideData" uservalue="{{outsideData}}" call="outsideCtrl.sayhi(name)"></currency-calc>
+
+</div>
 
 <script>
 
@@ -32,10 +59,26 @@
 
         /**Directive**/
         angular.module("app")
+            .directive("outerDirective", function() {
+                return {
+                    scope: {},
+                    link: function(scope, elem, attrs) {
+
+                    },
+                    controller: function() {
+                        this.sayhi = function(name) {
+                            alert('Hello' + name);
+                        };
+                    },
+                    controllerAs: "outsideCtrl"
+                };
+            });
+
+        angular.module("app")
             .directive("currencyCalc", function($q, $timeout, getCurrenyFactory) {
                     return {
                         scope: {
-                            user: "=", //двойное связывание,
+                            user: "=username", //двойное связывание,
                             uservalue: "@", //просто передача значения извне внутрь, но не в обратную сторону
                             call: "&" //коллбек
                         },
@@ -64,12 +107,14 @@
                         <p>Поле для @ - биндинга внутрь</p>
                         <input type='text' ng-model='uservalue'>
 
-                        <p>Поле для & - колбека</p>{{call({name: user})}}
+                        <p>Поле для & - колбека</p><button ng-click="call({name: user})">Trigger click</button>
 
                         <p>Пример обновления нового свойства из существующего</p>{{currencyCalcCtrl.getText()}}
                         <input type='text' ng-model='currencyCalcCtrl.inputText'>`
                     };
             });
+
+//        когда вызываю call({name: user}) либо в шаблоне, либо в коде, всегда параметр должен передавать в виде объекта, их можно использовать в множестве директив
 
     })();
 
