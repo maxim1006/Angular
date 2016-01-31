@@ -1,0 +1,84 @@
+<!doctype html>
+<html ng-app="app">
+<head>
+    <meta charset="UTF-8">
+    <title>Общая инфа</title>
+    <script src="https://code.jquery.com/jquery-2.2.0.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.5/angular.js"></script>
+    <script src="http://angular-ui.github.io/ui-router/release/angular-ui-router.js"></script>
+</head>
+<body>
+
+
+
+
+<div ui-view></div>
+
+
+
+<script>
+
+    (function() {
+
+        angular.module("app", ["ui.router"])
+                .config(function($stateProvider, $urlRouterProvider){
+
+                    // For any unmatched url, send to /route1
+                    $urlRouterProvider.otherwise("/");
+
+                    $stateProvider
+                            .state('view1', {
+                                url: "/view1",
+                                templateUrl: "view1.html",
+                                controller: function($state) {
+                                    console.log(123);
+                                    $state.go("view1.tab1");
+                                }
+
+                            })
+                            .state('/', {
+                                url: "/",
+                                templateUrl: "view1.html",
+                                controller: function($state) {
+                                    console.log(123);
+                                    $state.go("view1.tab1");
+                                }
+
+                            })
+                            .state('view1.tab1', {
+                                url: "/tab1",
+                                views: {
+                                    "tab1@view1": {template: "Tab 1 content"}
+                                }
+                            })
+                            .state('view1.tab2', {
+                                url: "/tab2",
+                                views: {
+                                    "tab2@view1": {template: "Tab 2 content"}
+                                }
+                            })
+                            .state('view1.tab3', {
+                                url: "/tab3",
+                                views: {
+                                    "tab3@view1": {template: "Tab 3 content"}
+                                }
+                            })
+                            .state('view2', {
+                                url: "/view2",
+                                templateUrl: "view2.html"
+                            })
+
+                })
+                .run(function($state) {
+                    //$state.go("view1");
+                });
+
+
+
+    })();
+
+</script>
+
+
+</body>
+</html>
