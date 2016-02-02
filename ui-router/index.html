@@ -24,7 +24,7 @@
                 .config(function($stateProvider, $urlRouterProvider){
 
                     // For any unmatched url, send to /route1
-                    $urlRouterProvider.otherwise("/");
+                    $urlRouterProvider.otherwise("/view1");
 
                     $stateProvider
                             .state('view1', {
@@ -38,11 +38,10 @@
                             })
                             .state('/', {
                                 url: "/",
-                                templateUrl: "view1.html",
                                 controller: function($state) {
                                     console.log(123);
-                                    $state.go("view1.tab1");
-                                }
+                                },
+                                abstract: true
 
                             })
                             .state('view1.tab1', {
