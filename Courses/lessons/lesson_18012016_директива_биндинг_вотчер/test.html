@@ -1,0 +1,41 @@
+<!doctype html>
+<html ng-app="app">
+<head>
+    <meta charset="UTF-8">
+    <title>Общая инфа</title>
+    <script src="https://code.jquery.com/jquery-2.2.0.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.5/angular.js"></script>
+</head>
+<body>
+
+<outer-dir></outer-dir>
+
+<script>
+    (function() {
+
+        angular.module("app", []);
+
+        angular.module("app")
+                .directive("outerDir", function() {
+                    return {
+                        scope: {},
+                        templateUrl: "test-dir.html"
+                    };
+                })
+                .directive("innerDir", function() {
+                    return {
+                        scope: {
+                            userName: "=userName"
+                        },
+                        controller: function($scope) {
+                            console.log($scope.name);
+                            this.userName = $scope.userName;
+                       },
+                        controllerAs: "c",
+                        template: "{{c.userName}} {{c.surname}}"
+                    };
+                })
+
+    })();
+
+</script>
