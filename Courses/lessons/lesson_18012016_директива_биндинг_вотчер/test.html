@@ -32,7 +32,22 @@
                             this.userName = $scope.userName;
                        },
                         controllerAs: "c",
-                        template: "{{c.userName}} {{c.surname}}"
+                        template: "{{c.userName}} {{c.surName}}"
+                    };
+                })
+
+                //а могу написать почище
+                .directive("innerDirCleaner", function() {
+                    return {
+                        scope: {},
+                        bindToController: {
+                            name: "=userName"
+                        },
+                        controller: function() {
+                            this.userName = this.name;
+                        },
+                        controllerAs: "c",
+                        template: "{{c.userName}} {{c.name}}"
                     };
                 })
 
