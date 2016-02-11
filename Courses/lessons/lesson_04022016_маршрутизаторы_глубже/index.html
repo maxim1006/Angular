@@ -1,0 +1,130 @@
+<!doctype html>
+<html ng-app="app">
+<head>
+    <!--<base href="/Angular/Angular/Courses/lessons/lesson_02022016/">&lt;!&ndash;это чтобы убрать #&ndash;&gt;-->
+    <meta charset="UTF-8">
+    <title>Общая инфа</title>
+    <script src="https://code.jquery.com/jquery-2.2.0.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.5/angular.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/angular-ui-router/0.2.18/angular-ui-router.js"></script>
+</head>
+<body>
+
+<a ui-sref="good">Good</a> <a ui-sref="bad">Bad</a> <a ui-sref="other">Other</a> <a ui-sref="tabs">Tabs</a>
+
+<div ui-view></div>
+
+<script>
+    angular.module("app", ['ui.router']);
+
+    angular.module('app')
+        .config(function($stateProvider, $urlRouterProvider,$locationProvider) {
+
+
+
+            //чтобы обновить тайтл
+            //<title ng-bind="{{page.Title}}"></title>
+            //$rootScope.pageTitle
+
+
+
+            $urlRouterProvider.otherwise("/");
+            //также могу испльзовать $urlRouterProvider для when куда передаю название пути и что сделать, когда на этот путь перешли
+            $urlRouterProvider.when("/all", function($stateParams) {
+                console.log("$stateParams", $stateParams);
+            });
+            //могу еще так использовать, т.е. когда путь /123 то переслать на /
+            $urlRouterProvider.when("/123", "/");
+
+
+
+            $stateProvider
+                .state('/', {
+                    url: '/',
+                    data: {
+                        prop: "prop" //просто какие-то данные для данного стейта, стейт можно инжектить и у него будет дата
+                    },
+                    template: "123",
+                    abstract: true, //когда мы объявляем так, то значит что на него мы не можем перейти, но можем на наследников перейти, в нем содержатся какие-то общие свойства для потомков (например будет начинаться url с чего-то, настройки в контроллере и т.д.), темплейт не отработает, на него нельзя перейти, отнаследуется шаблон, урла
+                    views: {} //для нестед вьюз но лучше использовать через .
+                })
+                .state('good', {
+                    url: '/good',
+                    template: ":-)",
+                    reloadOnSearch: false,//по умолчанию данные перезагружаются при изменении урлы, а если false, то надо будет самому перезагружать (например если фильтр есть, то хочу его оставить и перезагрузить только какие-то данные)
+                    controller: function($timeout) {
+                    }
+                })
+                .state('bad', {
+                    url: '/bad',
+                    template: `:-( <a ui-sref="bad.bad">bad bad</a> <ui-view></ui-view>`,
+                    resolve: {
+                        someData: function($q, $timeout, $http) {
+                            var defer = $q.defer();
+
+                            //могу получить данные через $http, но для примера седлаю $timeout
+                            $timeout(function() {
+                                defer.resolve("Прошла 2 секундочкО");
+                            }, 2000); //когда прамис который возвращает эта функция зарезолвился, то стейт показывается, до этого момента не показывается.
+                            return defer.promise;
+                        },
+                        //тут могу много таких запросов напихать и ждать пока они не обработаются, до этого времени не покажется вью, использую для загрузки важных данных (типо что за пользователь, имеет ли он доступ и т.д.)
+
+                        //в потомках (те которые через .) тоже может быть резолв, но они с родительскими будут выполнятся параллельно, чтобы это обойти просто нужно заинжектить данные resolve родителя в функцию в resolve потомка
+
+                        //на onStateChangeStart/ onChangeSuccess можно лоадеры показывать/скрывать
+                    },
+                    controller: function(someData) {
+                        console.log(someData);//тут уже дата приходит
+                        //console.log(123); //выполнится после 2х секунд
+                    }
+                })
+                .state('bad.bad', {
+                    url: '/bad',
+                    template: ":- (((",
+                    resolve: {
+                        childSomeData: function(someData, $timeout, $q) {
+                            var defer = $q.defer();
+
+                            $timeout(function() {
+                                defer.resolve("Прошла еще 2 секундочкО");
+                            }, 2000);
+
+                            return defer.promise;
+                        }
+                    },
+                    controller: function(childSomeData) {
+                        console.log(childSomeData);
+                    }
+                })
+                .state('other', {
+                    url: '/other',
+                    template: ":- ||"
+                })
+                .state('tabs', {
+                    url: '/tabs',
+                    template: `tabs
+                    <p>
+                        <a ui-sref="tabs.tab1">tab 1</a>
+                        <a ui-sref="tabs.tab2">tab 2</a>
+                        <a ui-sref="tabs.tab3">tab 3</a>
+                    </p>
+                    <div ui-view></div>`
+                })
+                .state('tabs.tab1', {
+                    url: '/tab1',
+                    template: "tab 1"
+                })
+                .state('tabs.tab2', {
+                    url: '/tab2',
+                    template: "tab 2"
+                })
+                .state('tabs.tab3', {
+                    url: '/tab3',
+                    template: "tab 3"
+                })
+            });
+</script>
+
+</body>
+</html>
