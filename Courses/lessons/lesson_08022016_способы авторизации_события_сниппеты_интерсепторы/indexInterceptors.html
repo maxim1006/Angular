@@ -1,0 +1,118 @@
+<!doctype html>
+<html ng-app="app">
+<head>
+    <!--<base href="/Angular/Angular/Courses/lessons/lesson_02022016/">&lt;!&ndash;это чтобы убрать #&ndash;&gt;-->
+    <meta charset="UTF-8">
+    <title>Общая инфа</title>
+    <script src="https://code.jquery.com/jquery-2.2.0.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.0/angular.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.0/angular-mocks.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/angular-ui-router/0.2.15/angular-ui-router.js"></script>
+</head>
+<body>
+
+<div ui-view></div>
+
+<!--
+
+   интерсепторы http://stepansuvorov.com/blog/2014/04/angularjs-interceptors-%D0%BF%D1%80%D0%B8%D0%BC%D0%B5%D1%80%D1%8B/
+
+   лучше хранить ОДНОРАЗОВЫЙ ключ(токен) к сессии (не логин и не пароль) и храним его с флашком httpOnly (проставляет сервер) - это значит что из js мы не можем достучаться до этой куки, это самый надежный способ
+   Получить эти куки можно при аджакс запросе
+
+   $httpProvider.defaults.xsrfHeaderName = 'X-CSRF-TOKEN';
+    $httpProvider.defaults.xsrfCookieName = 'CSRF-TOKEN';
+    могу делать такое соответствие токенов в куке
+
+    jqLite: https://gist.github.com/esfand/9638882
+    angular.element === jqLite === jQuery(если есть jquery)
+
+-->
+
+<script>
+    const app = angular.module('app', ['ui.router', 'ngMockE2E']);
+
+    app.factory("authReject", function($injector, $q) {
+        //обычная фабрика, но у нее есть responseError
+        //использую как место, где обрабатываются все ошибки
+        responseError = function(reject) {
+            if (reject.status === 401) {
+                console.log("reject status 401"); //ошибка авторизации
+                $injector.get("$state").go("login"); //делаю так со стейт чтобы избежать рекурсивную ошибку
+            }
+
+            return $q.reject();
+        };
+
+        return {
+            responseError: responseError
+        }
+    });
+
+    app.config(function($httpProvider, $stateProvider, $urlRouterProvider) { //в конфиге сервисов еще нет? зато есть провайдеры для описания сервисов
+
+        //$httpProvider нужно для предобработки и постобработки запросов - интерсептор, это что-то посередине между сервером и нашим ui
+
+        $httpProvider.interceptors.push('authReject'); //$httpProvider.interceptors - массив, в который добавляем элементы со своей логикой
+
+        $stateProvider
+            .state('login', {
+                url: '/login',
+                template: 'login'
+            })
+            .state('users', {
+                url: '/users',
+                template: '<user-list></user-list>',
+            });
+
+        $urlRouterProvider.otherwise('users');
+    })
+    .run(function($httpBackend) { //выполняется после config
+        usersObj = [1,2,3];
+        $httpBackend.whenGET('/users').respond(function() {
+            //return [200, usersObj];
+            return [401, {msg: "Login err"}];
+        });
+    });
+
+    app.directive('userList', function($http) {
+        return {
+            template: '<h1>USERS({{users.length}})</h1>',
+            link: function(scope) {
+                $http.get('/users').then(function(data) {
+                    scope.users = data.data;
+                });
+            }
+        };
+    });
+
+    app.directive('loginPage', function(AuthService, $state) {
+        return {
+            template: '<input ng-model="login"><input ng-model="password"><button ng-click="doLogin(login, password)">login</button>',
+            link: function(scope){
+                scope.doLogin = (login, password) => {
+                    $state.go("users");
+                    return AuthService.authorize(login, password);
+                }
+            }
+        };
+    });
+
+    app.service('AuthService', function() {
+        var isLogin = false;
+        this.authorize = (login, password) => {
+            if(login == 1 && password == 1) {
+                isLogin = true;
+            } else {
+                isLogin = false;
+            }
+            return isLogin;
+        }
+
+        this.isAuthorized = () => isLogin;
+    });
+
+</script>
+
+</body>
+</html>

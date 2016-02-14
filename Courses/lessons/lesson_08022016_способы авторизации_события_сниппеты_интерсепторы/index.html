@@ -1,0 +1,103 @@
+<!doctype html>
+<html ng-app="app">
+<head>
+    <!--<base href="/Angular/Angular/Courses/lessons/lesson_02022016/">&lt;!&ndash;это чтобы убрать #&ndash;&gt;-->
+    <meta charset="UTF-8">
+    <title>Общая инфа</title>
+    <script src="https://code.jquery.com/jquery-2.2.0.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.0/angular.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.0/angular-mocks.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/angular-ui-router/0.2.15/angular-ui-router.js"></script>
+</head>
+<body>
+
+<div ui-view></div>
+
+<!--
+
+    ангулар может посылать события через $scope с помощью $emit/$broadcast
+    может принимать через $on
+
+
+    тут сниппеты Степана для ui-router http://stepansuvorov.com/blog/2015/04/ui-router-debug/
+    тут общие сниппеты https://github.com/bahmutov/code-snippets
+   var $rootScope = angular.element(document).scope(); - если на html теге ng-app
+
+   интерсепторы http://stepansuvorov.com/blog/2014/04/angularjs-interceptors-%D0%BF%D1%80%D0%B8%D0%BC%D0%B5%D1%80%D1%8B/
+
+-->
+
+<script>
+    const app = angular.module('app', ['ui.router']);
+
+    app.config(function($stateProvider, $urlRouterProvider) {
+
+        $stateProvider
+            .state('login', {
+                url: '/login',
+                template: '<login-page></login-page>'
+            })
+            .state('users', {
+                url: '/users',
+                template: '<user-list></user-list>',
+                    //не нужно делать авторизацию так))) нужно через события в app.run()
+               /* resolve: {
+                    auth: function($q, $state, AuthService) {
+                        if(!AuthService.isAuthorized()) {
+
+                            alert('Вы должны авторизироваться!');
+                            $state.go('login');
+
+                            return $q.reject();
+                        }
+                    }
+                }*/
+            });
+
+        $urlRouterProvider.otherwise('users');
+    })
+    .run(function($rootScope, AuthService, $state) { //выполняется после config
+        $rootScope.$on("$stateChangeStart", function(event, toState, toParams, fromState, fromParams, options) {
+            if (toState.name !== "login" && !AuthService.isAuthorized()) {
+                $state.go("login");
+                event.preventDefault(); //ui-router предоставляет апи, чтобы это событие дальше не пошло, если где-то еще есть обработчик ставлю preventDefault();
+            }
+        });
+    });
+
+    app.directive('userList', function() {
+        return {
+            template: '<h1>USERS</h1>'
+        };
+    });
+
+    app.directive('loginPage', function(AuthService, $state) {
+        return {
+            template: '<input ng-model="login"><input ng-model="password"><button ng-click="doLogin(login, password)">login</button>',
+            link: function(scope){
+                scope.doLogin = (login, password) => {
+                    $state.go("users");
+                    return AuthService.authorize(login, password);
+                }
+            }
+        };
+    });
+
+    app.service('AuthService', function() {
+        var isLogin = false;
+        this.authorize = (login, password) => {
+            if(login == 1 && password == 1) {
+                isLogin = true;
+            } else {
+                isLogin = false;
+            }
+            return isLogin;
+        }
+
+        this.isAuthorized = () => isLogin;
+    });
+
+</script>
+
+</body>
+</html>

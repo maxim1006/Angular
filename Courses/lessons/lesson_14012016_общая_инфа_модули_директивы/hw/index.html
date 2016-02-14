@@ -29,6 +29,14 @@
         .mail-inbox__block+.mail-inbox__block {
             margin-left: 20px;
         }
+
+        .navbar-inverse .navbar-nav>li>a:focus, .navbar-inverse .navbar-nav>li>a:hover {
+            color: #9d9d9d;
+        }
+
+        .navbar-inverse .navbar-nav>li>a.active,.navbar-inverse .navbar-nav>li>a.active:focus, .navbar-inverse .navbar-nav>li>a.active:hover {
+            color: #fff;
+        }
     </style>
 
 </head>
@@ -37,8 +45,8 @@
 <nav class="navbar navbar-inverse navbar-static-top">
     <div class="container">
         <ul class="nav navbar-nav">
-            <li class="active"><a href="#/inbox">Входящие</a></li>
-            <li><a href="#/outbox">Исходящие</a></li>
+            <li><a ui-sref-active="active" ui-sref="inbox">Входящие</a></li>
+            <li><a ui-sref-active="active" ui-sref="outbox">Исходящие</a></li>
             <li><a href="#">Отправленные</a></li>
             <li><a href="#">Корзина</a></li>
             <li><a href="#">Спам</a></li>
@@ -160,8 +168,10 @@
                             url: "/login",
                             controller: function(loginFactory, $state, getInbox, getOutbox) {
 
-                                console.log(getInbox);
-                                console.log(getOutbox);
+                                if (loginFactory.getAccess()) {
+                                    $state.go('inbox');
+                                    return;
+                                }
 
                                 this.login = function() {
                                     loginFactory.setAccess(true);
@@ -179,23 +189,21 @@
                             },
                             controllerAs: "loginStateCtrl",
                             template: `
-                                <p>login: <input type="text"></p>
-                                <p>password: <input type="password"></p>
-                                <button ng-click="loginStateCtrl.login()">login</button>
+                                <p>login: <input type="text" class="input"></p>
+                                <p>password: <input type="password" class="input"></p>
+                                <button ng-click="loginStateCtrl.login()" class="button">login</button>
                             `
                         })
                         .state('inbox', {
                             url: "/inbox",
                             resolve: {
-                                login: function($q, loginFactory, $state) {
-                                    if (loginFactory.getAccess()) {
-                                        $q.resolve()
-                                    } else {
-                                        $q.reject();
-                                        $state.go('login');
-                                    }
+                                login: function($q, loginFactory) {
+                                    return loginFactory.getAccess() ? $q.resolve() : $q.reject();
                                 }
                             },
+                            controller: function() {
+                            },
+                            controllerAs: "inboxStateCtrl",
                             template: "<mail-inbox></mail-inbox>"
                         })
                         .state('inboxid', {
@@ -215,7 +223,7 @@
                                 </h1>
                             `
                         })
-                        .state('/outbox', {
+                        .state('outbox', {
                             resolve: {
                                 login: function($q, loginFactory) {
                                     return loginFactory.getAccess() ?  $q.resolve() : $q.reject();
@@ -225,7 +233,7 @@
                             template: "<mail-outbox></mail-outbox>"
                         });
                 })
-                .run(function($rootScope) {
+                .run(function($rootScope, $state) {
                     $rootScope
                         .$on('$stateChangeStart', function(event, toState, toParams, fromState, fromParams, options) {
                             $rootScope.showLoader = true;
@@ -241,6 +249,9 @@
                     $rootScope
                         .$on('$stateChangeError', function(event, toState, toParams, fromState, fromParams, error) {
                             $rootScope.showLoader = false;
+
+                            $state.go('login');
+
                             console.log('$stateChangeError', error);
                         });
                 });
