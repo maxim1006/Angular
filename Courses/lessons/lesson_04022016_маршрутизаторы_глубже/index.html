@@ -10,7 +10,13 @@
 </head>
 <body>
 
-<a ui-sref="good">Good</a> <a ui-sref="bad">Bad</a> <a ui-sref="other">Other</a> <a ui-sref="tabs">Tabs</a>
+<style>
+    ._active {
+        color: green;
+    }
+</style>
+
+<a ui-sref="good" ui-sref-active-eq="_active">Good</a> <a ui-sref="bad" ui-sref-active="_active">Bad</a> <a ui-sref="other" ui-sref-active="_active">Other</a> <a ui-sref="tabs" ui-sref-active="_active">Tabs</a>
 
 <div ui-view></div>
 
@@ -25,6 +31,15 @@
             //чтобы обновить тайтл
             //<title ng-bind="{{page.Title}}"></title>
             //$rootScope.pageTitle
+
+
+
+            //$state.go('home') - переходим на стейт home
+            //$state.go('^') - переход на родительский стейт
+            //$state.go('^.state') - переход на родительский стейт и соседний к нему
+
+
+            //чтобы выйти из приложения с помощью роутера необходимо либо проставить полный абсолютный путь, либо поставить target="_blank"
 
 
 
@@ -57,7 +72,7 @@
                 })
                 .state('bad', {
                     url: '/bad',
-                    template: `:-( <a ui-sref="bad.bad">bad bad</a> <ui-view></ui-view>`,
+                    template: `:-( <a ui-sref="bad.bad">bad bad</a> <ui-view></ui-view>`, //ui-sref-active="" добавляет к ссылке класс, что в кавычках, когда этот стейт становится активным
                     resolve: {
                         someData: function($q, $timeout, $http) {
                             var defer = $q.defer();
@@ -73,6 +88,8 @@
                         //в потомках (те которые через .) тоже может быть резолв, но они с родительскими будут выполнятся параллельно, чтобы это обойти просто нужно заинжектить данные resolve родителя в функцию в resolve потомка
 
                         //на onStateChangeStart/ onChangeSuccess можно лоадеры показывать/скрывать
+
+                        //если значение из функции не возвращается, то она резолвится с undefined, поэтому надо всегда помимо resolve делать reject
                     },
                     controller: function(someData) {
                         console.log(someData);//тут уже дата приходит
@@ -124,6 +141,7 @@
                     template: "tab 3"
                 })
             });
+
 </script>
 
 </body>

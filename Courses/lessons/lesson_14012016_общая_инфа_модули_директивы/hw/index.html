@@ -47,17 +47,20 @@
     </div>
 </nav>
 
-<ng-view></ng-view>
+<ui-view></ui-view>
+
+
+<div style="position:absolute;top: 50%; left: 50%;" ng-show="showLoader">Loading...</div>
 
 
 <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.5/angular.js"></script>
-<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.5/angular-route.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/angular-ui-router/0.2.18/angular-ui-router.js"></script>
 
 <script>
 
     (function() {
 
-        angular.module("app", ["ngRoute"]);
+        angular.module("app", ['ui.router']);
 
         angular.module("app")
                 .directive("mailInbox", function() {
@@ -131,17 +134,115 @@
 
                     return promise.promise
                 })
-                .config(function($routeProvider){
-                    $routeProvider.when('/inbox', {
-                        template: "<mail-inbox></mail-inbox>"
-                    });
-                    $routeProvider.when('/inbox-content/:id', {
-                        template: "<mail-inbox-content></mail-inbox-content>"
-                    });
-                    $routeProvider.when('/outbox', {
-                        template: "<mail-outbox></mail-outbox>"
-                    });
-                    //$routeProvider.otherwise({redirectTo: '/inbox'});
+                .factory("loginFactory", function() {
+                    var access;
+
+                    return {
+                        getAccess: function() {
+                            return access;
+                        },
+                        setAccess: function(value) {
+                            access = value;
+                        }
+                    };
+
+                })
+                .config(function($stateProvider, $urlRouterProvider){
+
+                    $urlRouterProvider.otherwise("/login");
+
+                    $stateProvider
+                        .state('/', {
+                            url: '/',
+                            abstract: true
+                        })
+                        .state('login', {
+                            url: "/login",
+                            controller: function(loginFactory, $state, getInbox, getOutbox) {
+
+                                console.log(getInbox);
+                                console.log(getOutbox);
+
+                                this.login = function() {
+                                    loginFactory.setAccess(true);
+                                    $state.go('inbox');
+                                };
+
+                            },
+                            resolve: {
+                                getInbox: function($http) {
+                                    return $http.get("inbox.json");
+                                },
+                                getOutbox: function($http) {
+                                    return $http.get("outbox.json");
+                                }
+                            },
+                            controllerAs: "loginStateCtrl",
+                            template: `
+                                <p>login: <input type="text"></p>
+                                <p>password: <input type="password"></p>
+                                <button ng-click="loginStateCtrl.login()">login</button>
+                            `
+                        })
+                        .state('inbox', {
+                            url: "/inbox",
+                            resolve: {
+                                login: function($q, loginFactory, $state) {
+                                    if (loginFactory.getAccess()) {
+                                        $q.resolve()
+                                    } else {
+                                        $q.reject();
+                                        $state.go('login');
+                                    }
+                                }
+                            },
+                            template: "<mail-inbox></mail-inbox>"
+                        })
+                        .state('inboxid', {
+                            url: "/inbox/:id",
+                            resolve: {
+                                login: function($q, loginFactory) {
+                                    return loginFactory.getAccess() ?  $q.resolve() : $q.reject();
+                                }
+                            },
+                            controller: function($stateParams) {
+                                this.id = $stateParams.id;
+                            },
+                            controllerAs: "inboxidStateCtrl",
+                            template: `
+                                <h1>
+                                    {{inboxidStateCtrl.id}}
+                                </h1>
+                            `
+                        })
+                        .state('/outbox', {
+                            resolve: {
+                                login: function($q, loginFactory) {
+                                    return loginFactory.getAccess() ?  $q.resolve() : $q.reject();
+                                }
+                            },
+                            url: "/outbox",
+                            template: "<mail-outbox></mail-outbox>"
+                        });
+                })
+                .run(function($rootScope) {
+                    $rootScope
+                        .$on('$stateChangeStart', function(event, toState, toParams, fromState, fromParams, options) {
+                            $rootScope.showLoader = true;
+                            console.log("fromState", fromState);
+                            console.log("toState", toState);
+                        });
+
+                    $rootScope
+                        .$on('$stateChangeSuccess', function(event, toState, toParams, fromState, fromParams) {
+                            $rootScope.showLoader = false;
+                        });
+
+                    $rootScope
+                        .$on('$stateChangeError', function(event, toState, toParams, fromState, fromParams, error) {
+                            $rootScope.showLoader = false;
+                            console.log('$stateChangeError', error);
+                        });
                 });
 
     })();
