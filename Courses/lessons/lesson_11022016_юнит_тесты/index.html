@@ -1,0 +1,71 @@
+<!doctype html>
+<html ng-app="app">
+<head>
+    <!--<base href="/Angular/Angular/Courses/lessons/lesson_02022016/">&lt;!&ndash;это чтобы убрать #&ndash;&gt;-->
+    <meta charset="UTF-8">
+    <title>Общая инфа</title>
+    <script src="https://code.jquery.com/jquery-2.2.0.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.0/angular.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.0/angular-mocks.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/angular-ui-router/0.2.15/angular-ui-router.js"></script>
+</head>
+<body>
+
+<!--
+
+angular.element(node).scope().scopeMethod(); - так могу забрать метод и скоуп
+console.dir(angular.element("custom-el").scope().__имя-контроллера__);
+
+angular.module('app')._invokeQueue - все директивы и фабрики посмотреть
+
+angular.element(document).injector().get("$rootScope") - так могу получить любой инжектор
+angular.element(document).injector().get("$http")
+angular.element(document).injector().get("factory") //так получаю фабрику
+angular.element(document).injector().get("customElDirective") //а так получаю директиву (имя директивы + Directive) - директива - это таже фабрика с suffix Directive. Директив может быть несколько
+
+Юнит тесты - это тесты юнитов/модулей приложения (мелких частей)
+-->
+
+<custom-el></custom-el>
+<custom-el1></custom-el1>
+
+
+<script>
+
+    (function() {
+
+        angular.module('app', []);
+
+        angular.module('app')
+            .directive("customEl", function(factory) {
+                return {
+                    controller: function() {
+                        this.prop = 123;
+                    },
+                    controllerAs: "customElCtrl"
+                }
+            });
+
+        angular.module('app')
+                .directive("customEl1", function(customEl) {
+                    return {
+                        controller: function() {
+                            console.log(customEl);
+                        },
+                        controllerAs: "customElCtrl"
+                    }
+                });
+
+        angular.module('app')
+            .factory("factory", function() {
+                return {
+                    prop: "factory prop"
+                };
+            });
+
+    })();
+
+</script>
+
+</body>
+</html>
