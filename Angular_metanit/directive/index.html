@@ -85,7 +85,7 @@ triggerHandler(event): вызывает обработчики для событ
 
 
 <custom-element>
-    <p>то что оттрансклудил перед списком фреймворков</p>
+    <p>то что оттрансклудил перед списком фреймворков {{custom.items}}</p>
 </custom-element>
 
 
@@ -110,6 +110,7 @@ triggerHandler(event): вызывает обработчики для событ
 
         App.directive("customElement", function($timeout) {
             return {
+                scope: {},
                 link: function(scope, element, attrs) {
                     $timeout(function() {
                         angular.element(element[0].querySelectorAll("li")).on('click', function() {

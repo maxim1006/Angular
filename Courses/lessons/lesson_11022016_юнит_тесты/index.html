@@ -4,10 +4,8 @@
     <!--<base href="/Angular/Angular/Courses/lessons/lesson_02022016/">&lt;!&ndash;это чтобы убрать #&ndash;&gt;-->
     <meta charset="UTF-8">
     <title>Общая инфа</title>
-    <script src="https://code.jquery.com/jquery-2.2.0.min.js"></script>
-    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.0/angular.min.js"></script>
-    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.0/angular-mocks.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/angular-ui-router/0.2.15/angular-ui-router.js"></script>
+    <script src="angular.js"></script>
+    <script src="angular-mocks.js"></script>
 </head>
 <body>
 
@@ -24,48 +22,17 @@ angular.element(document).injector().get("factory") //так получаю фа
 angular.element(document).injector().get("customElDirective") //а так получаю директиву (имя директивы + Directive) - директива - это таже фабрика с suffix Directive. Директив может быть несколько
 
 Юнит тесты - это тесты юнитов/модулей приложения (мелких частей)
+
+При тестах контроллера проверяю не сервис, а то что методы этого сервиса вызваны, ну и результат вызова)
+
+https://github.com/gotwarlost/istanbul - тула для того чтобы фиксировать насколько проект покрыт тестами
 -->
 
 <custom-el></custom-el>
 <custom-el1></custom-el1>
 
 
-<script>
-
-    (function() {
-
-        angular.module('app', []);
-
-        angular.module('app')
-            .directive("customEl", function(factory) {
-                return {
-                    controller: function() {
-                        this.prop = 123;
-                    },
-                    controllerAs: "customElCtrl"
-                }
-            });
-
-        angular.module('app')
-                .directive("customEl1", function(customEl) {
-                    return {
-                        controller: function() {
-                            console.log(customEl);
-                        },
-                        controllerAs: "customElCtrl"
-                    }
-                });
-
-        angular.module('app')
-            .factory("factory", function() {
-                return {
-                    prop: "factory prop"
-                };
-            });
-
-    })();
-
-</script>
+<script src="app.js"></script>
 
 </body>
 </html>
