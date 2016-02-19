@@ -46,7 +46,11 @@ app.directive("custom", function() {
 
                 element.append(clone);
             });
-        }
+        },
+        controller: function() {
+            this.name = "123";
+        },
+        controllerAs: "customCtrl"
     }
 });
 
