@@ -1,0 +1,54 @@
+<!doctype html>
+<html ng-app="app">
+<head>
+    <meta charset="UTF-8">
+    <title>Общая инфа</title>
+    <script src="https://code.jquery.com/jquery-2.2.0.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.5/angular.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/angular-ui-router/0.2.18/angular-ui-router.js"></script>
+</head>
+<body>
+
+    <!-- По умолчанию у всех элементов общий скоуп = рутскоуп, а потом, когда делаю scope: {}, то становится отдельный скоуп, причем вложенная директива/контроллер прототипно наследует родительский скоуп-->
+    <outer-dir></outer-dir>
+
+
+<script>
+
+    (function() {
+
+        angular.module('app', ['ui.router']);
+
+        angular.module('app').directive('outerDir', function($rootScope) {
+            return {
+                scope: {},
+                controller: function($scope) {
+                },
+                link: function(scope, el, attrs) {
+                    $rootScope.$emit('someEvent', ["from $rootScope $emit"]); //обязательно делаю это в линк, вызывает все someEvent в родительских
+                    $rootScope.$broadcast('someEvent', ["from $rootScope $broadcast"]); //вызывает все someEvent в дочерних скоупах
+                    scope.$broadcast('someEvent', ["from outerDir $broadcast"]); //обязательно делаю это в линк
+                    scope.$emit('someEvent', ["from outerDir $emit"]);
+                },
+                template: "<inner-dir></inner-dir>"
+            };
+        });
+
+        angular.module('app').directive('innerDir', function($rootScope) {
+            return {
+                scope: {},
+                controller: function($scope) {
+                },
+                link: function(scope, el, attrs) {
+                    scope.$on('someEvent', function(event, data) { console.log("scope", data); });
+                    $rootScope.$on('someEvent', function(event, data) { console.log("$rootScope", data); });
+                }
+            };
+        });
+
+    })();
+
+</script>
+
+</body>
+</html>
