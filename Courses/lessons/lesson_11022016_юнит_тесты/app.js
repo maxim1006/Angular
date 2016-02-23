@@ -3,22 +3,28 @@
     angular.module('app', []);
 
     angular.module('app')
-        .directive("customEl", function(factory) {
+        .directive("customEl", function(factoryCustom) {
             return {
                 controller: function() {
                     this.prop = 123;
                 },
+                link: function(scope) {
+                    scope.method = function() {
+                        return factoryCustom.get();
+                    };
+                },
+                scope: {},
                 controllerAs: "customElCtrl"
             }
         });
 
     angular.module('app')
-        .directive("customEl1", function(customEl) {
+        .directive("customEl1", function(factoryCustom) {
             return {
                 controller: function() {
-                    console.log(customEl);
                 },
-                controllerAs: "customElCtrl"
+
+                controllerAs: "customEl1Ctrl"
             }
         });
 

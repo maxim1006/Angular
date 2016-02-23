@@ -76,6 +76,27 @@ describe("Some test", function() {
 
 
 
+    describe("test of a directive", function() { //если поставить x перед describe или it, то тест будет пропущен xdescribe
+        var factoryCustom,
+            element,
+            $scope,
+            isolateScope;
 
+        beforeEach(inject(function($q, $rootScope, $compile, _factoryCustom_) {
+            factoryCustom = _factoryCustom_;
+            $scope = $rootScope.$new();
+            spyOn(factoryCustom, 'get').and.returnValue(1);
+            element = angular.element("<custom-el></custom-el>");
+            $compile(element)($scope); //функция $compile принимает шаблон и возвращает функцию, которая принимает scope
+            $scope.$digest();
+            isolateScope = element.isolateScope();//если скоуп изолирован, то скоуп можно получить как angular.element().isolateScope(), если обычный скоуп, то angular.element().scope()
+        }));
+
+        it("should test method method", function() {
+            isolateScope.method();
+            expect(factoryCustom.get()).toBe(1);
+        });
+
+    });
 
 });
