@@ -1,0 +1,67 @@
+<!doctype html>
+<html ng-app="app">
+<head>
+    <meta charset="UTF-8">
+    <title>Общая инфа</title>
+    <script src="https://code.jquery.com/jquery-2.2.0.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.0/angular.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/angular-ui-router/0.2.18/angular-ui-router.js"></script>
+</head>
+<body>
+<style>
+    button[disabled="disabled"] {
+        opacity: 0.5;
+    }
+</style>
+
+    <form-main></form-main>
+
+
+<script>
+
+    (function() {
+
+        angular.module('app', []);
+
+
+        angular.module('app')
+            .directive('formMain', function() {
+                return {
+                    scope: {},
+                    bindToController: {},
+                    controller: function($q) {
+                        var self = this;
+
+                        self.onSubmit = function(data) {
+                            console.log($q.reject(data));
+                            console.log($q.defer());
+                            console.log($q.defer().promise);
+                            $q.reject(data).then(function(data) {
+                                console.log("post success", data);
+                            },
+                            function(err) {
+                                throw new Error(err);
+                                console.log("post error", err);
+                            });
+                        };
+                    },
+                    controllerAs: "formMainCtrl",
+                    link: function() {},
+                    template: `
+
+                        <form name="main" novalidate ng-submit="formMainCtrl.onSubmit(formMainCtrl.inputValue)">
+                            <input type="text" required ng-model="formMainCtrl.inputValue">
+
+                            <button type="submit" ng-disabled="main.$invalid">Submit</button>
+                        </form>
+
+                    `,
+                };
+            });
+
+    })();
+
+</script>
+
+</body>
+</html>

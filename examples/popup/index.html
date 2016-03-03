@@ -1,0 +1,137 @@
+<!doctype html>
+<html ng-app="app">
+<head>
+    <meta charset="UTF-8">
+    <title>Общая инфа</title>
+    <script src="https://code.jquery.com/jquery-2.2.0.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.0/angular.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/angular-ui-router/0.2.18/angular-ui-router.js"></script>
+</head>
+<body>
+<style>
+
+</style>
+
+    <popup-main></popup-main>
+
+    <p></p>
+    <p></p>
+    <p></p>
+
+    <popup-second></popup-second>
+
+
+<script>
+
+    (function() {
+
+        angular.module('app', []);
+
+
+        angular.module('app')
+            .directive('popupMain', function($timeout) {
+                return {
+                    scope: {},
+
+                    bindToController: {},
+
+                    controller: function() {
+                    },
+
+                    controllerAs: "popupMainCtrl",
+
+                    link: function(scope, el, attrs, ctrl) {
+                        ctrl.onBlur = function() {
+                            ctrl.isVisible = false;
+                        };
+
+                        ctrl.onShow = function() {
+
+                            if (ctrl.isVisible) {
+                                ctrl.isVisible = false;
+                            } else {
+                                ctrl.isVisible = true;
+
+                                $timeout(function() {
+                                    el[0].querySelector(".popup").focus();
+                                });
+                            }
+
+                        };
+                    },
+
+                    template: `
+
+                        <span ng-mousedown="popupMainCtrl.onShow()">Show popup</span>
+
+                        <div class="popup" tabindex="-1"
+                        ng-show="popupMainCtrl.isVisible"
+                        ng-blur="popupMainCtrl.onBlur($event)"
+                        >
+
+                        Popup
+
+                        </div>
+
+                    `,
+                };
+            })
+
+
+
+            .directive('popupSecond', function($document) {
+                return {
+                    scope: {},
+
+                    bindToController: {},
+
+                    controller: function() {
+                    },
+
+                    controllerAs: "popupSecondCtrl",
+
+                    link: function(scope, el, attrs, ctrl) {
+                        scope.onPopupTriggerClick = function() {
+                            !ctrl.visibleLogout ? ctrl.visibleLogout = true : ctrl.visibleLogout = false;
+                        };
+
+                        $document.on('click', onUserNameClick);
+
+                        scope.$on('$destroy', function() {
+                            $document.off('click', eventHandler);
+                        });
+
+
+
+                        /*Helpers*/
+                        function onUserNameClick(e) {
+                            if (el !== e.target && !el[0].contains(e.target)) {
+                                scope.$apply(function () {
+                                    ctrl.visibleLogout = false;
+                                });
+                            }
+                        }
+                    },
+
+                    template: `
+
+                    <span ng-click="onPopupTriggerClick()">Show popup</span>
+
+                    <div class="popup" tabindex="-1"
+                    ng-show="popupSecondCtrl.visibleLogout"
+                    >
+
+                    Popup
+
+                    </div>
+
+                `,
+                };
+            });
+
+    })();
+
+</script>
+
+</body>
+</html>

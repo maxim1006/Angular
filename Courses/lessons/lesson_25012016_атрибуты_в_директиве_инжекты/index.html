@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <title>Общая инфа</title>
     <script src="https://code.jquery.com/jquery-2.2.0.min.js"></script>
-    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.5/angular.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.0/angular.js"></script>
 </head>
 <body>
 
@@ -35,7 +35,10 @@ Restangular
 <div outer-directive>
 
 <input type="text" ng-model="outsideData">
-<currency-calc userName="outsideData" uservalue="{{outsideData}}" call="outsideCtrl.sayhi(name)"></currency-calc>
+    <outer-directive>
+
+    </outer-directive>
+
 
 </div>
 
@@ -61,7 +64,8 @@ Restangular
         angular.module("app")
             .directive("outerDirective", function() {
                 return {
-                    scope: {},
+                    scope: {}, //если тут будет изолированный скоуп, то к контроллеру внешней (в данном случае этой директивы не подобраться, поэтому надо закинуть внутреннюю директиву в темплейт внешней, тогда сработает, иначе не считается что внутренняя директива внутри внешней, поэтому и клик не работает)
+//                    //https://github.com/angular/angular.js/blob/eae0a1121ffcc636d760463105dcdc548ea47390/src/ng/compile.js#L2538-L2545
                     link: function(scope, elem, attrs) {
 
                     },
@@ -70,7 +74,9 @@ Restangular
                             alert('Hello' + name);
                         };
                     },
-                    controllerAs: "outsideCtrl"
+                    controllerAs: "outsideCtrl",
+                    template: `
+                    <currency-calc uservalueObj="outsideData" userName="outsideData" uservalue="{{outsideData}}" call="outsideCtrl.sayhi(name)"></currency-calc>`
                 };
             });
 
@@ -80,6 +86,7 @@ Restangular
                         scope: {
                             user: "=username", //двойное связывание,
                             uservalue: "@", //просто передача значения извне внутрь, но не в обратную сторону
+                            uservalueObj: "<", //просто передача значения извне внутрь, но не в обратную сторону
                             call: "&" //коллбек
                         },
                         link: function(scope, elem, attrs, ctrl) {
@@ -105,6 +112,9 @@ Restangular
                         <input type='text' ng-model='user'>
 
                         <p>Поле для @ - биндинга внутрь</p>
+                        <input type='text' ng-model='uservalue'>
+
+                        <p>Поле для < - биндинга внутрь не только строк но и объектов и выражений</p>
                         <input type='text' ng-model='uservalue'>
 
                         <p>Поле для & - колбека</p><button ng-click="call({name: user})">Trigger click</button>

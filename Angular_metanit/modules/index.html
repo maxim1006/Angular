@@ -32,11 +32,9 @@
                   });
 
         App.controller("listNamesCtrl", function($rootScope) {
-            //можно $rootScope вызвать где угодно
-            //console.log($rootScope.moduleName);
 
             var _this = this,
-                currentEditInputFocused;
+                    currentEditInputFocused;
 
             this.names = model;
 
@@ -64,6 +62,8 @@
                 _this['showEdit' + $index] = false;
             };
 
+            //можно $rootScope вызвать где угодно
+            //console.log($rootScope.moduleName);
             this.onBlur = function($index, editName) {
                 _this['showEdit' + $index] = false;
                 currentEditInputFocused = null;
