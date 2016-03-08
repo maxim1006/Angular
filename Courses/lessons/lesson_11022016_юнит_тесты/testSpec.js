@@ -71,6 +71,8 @@ describe("Some test", function() {
             });
 
             $httpBackend.flush(); //нужно чтобы избежать ошибки Async callback was not invoked within timeout specified by jasmine.DEFAULT_TIMEOUT_INTERVAL.
+
+            //$timeout.flush(); - если использую таймаут, то чтобы сказать тестам, что он закончился использую это
         });
     });
 

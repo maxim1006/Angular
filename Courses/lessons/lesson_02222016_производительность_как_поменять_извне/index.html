@@ -1,0 +1,103 @@
+<!doctype html>
+<html ng-app="app">
+<head>
+    <!--<base href="/Angular/Angular/Courses/lessons/lesson_02022016/">&lt;!&ndash;это чтобы убрать #&ndash;&gt;-->
+    <meta charset="UTF-8">
+    <title>Общая инфа</title>
+    <script src="https://code.jquery.com/jquery-2.2.0.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.5/angular.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/angular-ui-router/0.2.18/angular-ui-router.js"></script>
+</head>
+<body>
+
+<!--
+
+лучше использовать ng-if вместо ng-show
+
+http://kamilkp.github.io/angular-vs-repeat - меняет стандартный ng-repeat, и оставляет вотчеры, толкьо на элементах которые попали в visible часть окна
+
+максимально использовать ng-change и остальные методы вместо $watch
+
+document.all - выбираем все элементы на странице
+
+для ng-model можем использовать ng-model-options (а в нем debounce или onblur)
+
+one time binding {{::prop}}
+
+
+Если приходится использовать вотчеры, то не делать рекурсивные вотчеры, т.е. не делать изменения других вотчеров внутри вотчера
+Хорошо использовать watchCollection, watchGroup
+после применения вотчера делаю unwatch http://slides.com/stevermeister/does-angularjs-have-performance-issues-2#/6/4
+
+scope.$apply() = $rootScope.$digest(); - те при apply обновляются все все скоупы, поэтому использую scope.$digest();
+-->
+
+<p>Поменять значение текста на произвольное из внешнего js</p>
+
+<input type="text" id="outerInput"><button id="outerBtn">Поменять</button>
+
+<p></p>
+
+<custom-dir text="123"></custom-dir>
+
+<script>
+
+    $(function() {
+        $('#outerBtn').click(function() {
+            var dir = angular.element("custom-dir");
+            dir.attr('text', $("#outerInput").val());
+            dir.isolateScope()['customDirCtrl'].text = $("#outerInput").val();
+            dir.isolateScope().$digest();
+            console.log(dir.isolateScope());
+            console.log(dir.isolateScope()['customDirCtrl']);
+        });
+    });
+
+
+    (function() {
+
+        angular.module("app", [])
+                .directive('customDir', customDir);
+
+        function customDir() {
+            return {
+                scope: {},
+                bindToController: {
+                    text: "@"
+                },
+                controller: function() {
+                },
+                controllerAs: "customDirCtrl",
+                link: function(scope, el, attrs, ctrl) {
+                    scope.$watch("customDirCtrl.model", function(val) {
+                        console.log("watch", val);
+                    });
+
+                    attrs.$observe("text", function(val, newVal) {
+                        console.log("$observe old val", val);
+                        console.log("$observe new val", newVal);
+                    });
+                },
+                template: `
+                    <input type="text" ng-model="customDirCtrl.model">
+
+                    <p>
+                        ::customDirCtrl.text
+                    </p>
+                    {{::customDirCtrl.text}}
+
+                    <p>
+                        Обычный биндинг
+                    </p>
+                    {{customDirCtrl.text}}
+                `
+            };
+        }
+
+    })();
+
+
+</script>
+
+</body>
+</html>

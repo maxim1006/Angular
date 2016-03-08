@@ -10,113 +10,25 @@
 </head>
 <body>
 
-<!--Controller отличается от link - тем, что он создается до компиляции и возвращает объект, поэтому в нем есть this, а в link нет
-В контроллер можем передавать сервисы, а в link(scope, element,  attrs, ctrls, transclude)
+<!--у spa есть activity, это типо как страницы на сайте
 
-Контроллер можно использовать повторно, определить в одной директиве и использовать в другой с link так нельзя.
 
-Про проверку данных в форме
-http://stepansuvorov.com/blog/2015/06/angularjs-%D0%B8-%D0%BF%D1%80%D0%BE%D0%B2%D0%B5%D1%80%D0%BA%D0%B0-%D0%B4%D0%B0%D0%BD%D0%BD%D1%8B%D1%85-%D1%84%D0%BE%D1%80%D0%BC%D1%8B/
+    В shared - лежат компоненты, которые исользуются во многих местах
+
+    В factories - должны лежат фабрики, которые используются везде
+
+    При сборке webpack можно подключать модули и через
+
+    import './modulename'
+
+    либо
+
+    require("./modulename")
+
 -->
-
-
-    <outer-dir>
-
-        <inner-dir></inner-dir>
-
-    </outer-dir>
-
-    <ui-view></ui-view>
-
 
 <script>
 
-    (function() {
-
-        /*Переход по ссылкам роута
-        *
-        * $state.go('имя_стейта')
-        * $state.go('имя_стейта_c_параметрами', {param: param})
-        * ui-sref="имя_стейта";
-        * ui-sref="имя_стейта({param: param})";
-        *
-        * */
-
-        angular.module('app', ['ui.router']);
-
-        angular.module('app').config(function($stateProvider, $urlRouterProvider,$locationProvider) {
-
-            //$locationProvider.html5Mode(true); нужно чтобы убрать #, но при этом сервер всегда должен редиректить на index.html
-
-            $urlRouterProvider.otherwise("/firstView");
-
-            $stateProvider
-                .state('firstView', {
-                    url: "/firstView",
-                    controller: function() {
-                        this.name = "firstViewCtrl";
-                    },
-                    controllerAs: "firstViewCtrl",
-                    template: "{{firstViewCtrl.name}} <a ui-sref='secondView'>go to second view</a>"
-                    //template: "<first-view></first-view>" //стараюсь делать так, т.е. каждому урл соответствует свой компонент, в нем контроллер и все такое, также могу использовать старый подход, где контроллер и все такое ху...тся прямо в роутер
-                })
-                .state('secondView', {
-                    url: "/firstView/secondView",
-                    template: "Second View <a ui-sref='firstView'>go to first view</a> <ui-view></ui-view>"
-                })
-                .state('secondView.inner', {
-                    url: "/inner", //будет урл firstView/secondView/inner, так как отсчитывается от родительской url
-                    template: "<p>Inner second view <a ui-sref='firstView'>go to first view</a> <a ui-sref='secondView'>go to second view</a></p>"
-                })
-                .state('someView', {
-                    url: "/firstView/secondView/:someView",
-                    template: "Some View {{someViewCtrl.state}} <a ui-sref='firstView'>go to first view</a> <a ui-sref='secondView'>go to second view</a>",
-                    controller: function($stateParams) {
-                        console.log($stateParams); //Object {someView: "1"} отсюда могу вытащить инфу о пути
-                        this.state = $stateParams.someView;
-                    },
-                    controllerAs: "someViewCtrl"
-                });
-        });
-
-        angular.module('app').directive('firstView', function() {
-            return {
-                scope: {},
-                controller: function() {
-                },
-                bindToController: {},
-                controllerAs: "firstViewCtrl",
-                template: "firstView"
-            };
-        });
-
-        angular.module('app').directive('outerDir', function() {
-            return {
-                scope: {},
-                controller: function() {
-                    this.prop = "outerDirCtrl";
-                },
-                bindToController: {},
-                controllerAs: "outerDirCtrl"
-            };
-        });
-
-        angular.module('app').directive('innerDir', function() {
-            return {
-                scope: {},
-                controller: function() {
-                },
-                link: function(scope, element, attra, outerDirСtrl, transclude) {
-                    console.log(outerDirСtrl); //Object {prop: "outerDirCtrl"}
-                },
-                require: '?^outerDir', //тут нахожу родительскую директиву и беру ее контроллер, затем могу использовать эти значения в ctrls.prop, ^ ищет проперти внутри контроллера директивы и родителей более подробно тут https://demisx.github.io/angularjs/directives/2014/11/25/angular-directive-require-property-options.html, ? не будет fatal ошибки, если контроллер не найдется. Причем эта фича только через линк.
-                bindToController: {},
-                controllerAs: "innerDirCtrl",
-                template: "{{innerDirCtrl.prop}}"
-            };
-        });
-
-    })();
 
 </script>
 

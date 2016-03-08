@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en" ng-app="demo">
+
+<head>
+    <meta charset="utf-8" />
+    <title>AngularJS</title>
+    <link href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body {
+            padding: 20px;
+        }
+    </style>
+</head>
+
+<body ng-controller="DemoCtrl">
+
+
+<div>
+    <div>immediate:
+        <input ng-model="search">
+    </div>
+    <div>with delay:
+        <input ng-model="search" ng-model-options="{ debounce: 500 }">
+    </div>
+    <div>on blur:
+        <input ng-model="search" ng-model-options="{ updateOn: 'blur'}">
+    </div>
+    <h1>{{search}}</h1>
+
+    <div id="log">
+        {{serverCalls}}
+    </div>
+</div>
+
+
+<script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.3.15/angular.js"></script>
+<script src="demo.js"></script>
+</body>
+
+</html>

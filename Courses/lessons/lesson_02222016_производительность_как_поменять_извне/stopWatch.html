@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en" ng-app="demo">
+<head>
+    <meta charset="utf-8" />
+    <title>AngularJS </title>
+    <link href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap.min.css" rel="stylesheet">
+</head>
+
+<body ng-controller="DemoCtrl">
+<br><br><br>
+name: <input ng-model="name"><button ng-click="addName(name)" class="btn btn-primary btn-lg">add</button>
+<br>
+<ul>
+    <li ng-repeat="name in names track by $index">{{name}}</li>
+</ul>
+<br>
+<h1>{{count}}</h1>
+<br>
+<button ng-click="stopWatching()" class="btn btn-primary btn-lg btn-block">Finish Editing - Stop watching</button>
+<script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.3.15/angular.js"></script>
+<script>
+
+
+    (function() {
+
+        'use strict';
+
+        var app = angular.module('demo', []);
+
+        app.controller('DemoCtrl', function($scope, $timeout) {
+
+            $scope.names = [];
+
+            $scope.addName = function(name){
+                $scope.name = '';
+                $scope.names.push(name);
+            };
+
+            //deep copy
+            var unwatch = $scope.$watch('names', function(newVal){
+                console.log('Changed');
+                $scope.count = newVal.length;
+            }, true);
+
+            $scope.stopWatching = function(name){
+                unwatch();
+            };
+
+        });
+
+    })();
+
+</script>
+</body>
+</html>
