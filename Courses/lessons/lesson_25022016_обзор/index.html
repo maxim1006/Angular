@@ -1,0 +1,101 @@
+<!doctype html>
+<html ng-app="app">
+<head>
+    <!--<base href="/Angular/Angular/Courses/lessons/lesson_02022016/">&lt;!&ndash;это чтобы убрать #&ndash;&gt;-->
+    <meta charset="UTF-8">
+    <title>Общая инфа</title>
+    <script src="https://code.jquery.com/jquery-2.2.0.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.5/angular.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/angular-ui-router/0.2.18/angular-ui-router.js"></script>
+</head>
+<body>
+
+<!--
+<div class="loader" ng-if="ctrl.isLoading()">
+
+this.isLoading = function() {
+    return $http.pendingRequests.length - проверить сколько осталось запросов, нужно для лоадера
+};
+
+
+
+При тестах и работе с моками хорошая практика делать angular.copy(mockObjects) - чтобы не испортить объект для других тестов (angular.copy - делает копию объекта)
+
+
+
+
+
+На запросы в сервисах можно делать кеширование, чтобы не дергать сервисы постоянно
+
+
+
+
+
+$evalAsync() - тоже, что и $timeout(()=>{}, 0), но более оптимизирована, а $applyAsync() - тоже что и $evalAsync(), только вызывается через некоторое время после начала дайджеста, использую $applyAsync() (он используется для $http запросов). Использую эти методы когда scope.$digest() запустить не могу, так как дайджест уже запущен, но при этом что-то хочу выполнить, поэтому и вызываю асинхронно эти методы
+
+пример
+var app = angular.module('plunker', []);
+
+app.controller('MainCtrl', function($scope, $timeout) {
+
+  $scope.val = 123;
+
+  $scope.$watch('val',
+    function (newValue, oldValue, scope) {
+      // scope.$apply(function () {
+      //   console.log('This will not work');
+      // });
+
+      console.log(oldValue);
+
+      $timeout(function () {
+        console.log('$timeout1');
+      });
+
+      scope.$evalAsync(function () {
+        console.log('$evalAsync1');
+      });
+
+      scope.$applyAsync(function () {
+        console.log('$applyAsync1');
+      });
+
+      $timeout(function () {
+        console.log('$timeout2');
+      });
+
+      scope.$evalAsync(function () {
+        console.log('$evalAsync2');
+      });
+
+      scope.$applyAsync(function () {
+        console.log('$applyAsync2');
+      });
+    }
+  );
+});
+
+
+
+
+ng-grid - хороший плагин для таблиц
+
+Infinite Scrolling - для бесконечного скролла
+
+https://prerender.io/ - тула, которая ходит по страничкам и сохраняет себе статическую копию (для SEO), а затем поисковому движку, используя этот сервис отдаем кешированные странички
+
+
+
+
+$formatters, $parsers: http://plnkr.co/edit/9LfbeVI7eCFiK9okWcMY?p=preview
+
+
+ http://bevacqua.github.io/angular-dragula/ - хороший drag n drop
+
+
+ https://angular-ui.github.io/ - тут плагины для ангулара
+
+ -->
+
+</body>
+</html>
