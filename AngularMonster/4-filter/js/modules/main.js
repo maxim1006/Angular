@@ -1,11 +1,13 @@
 var app = angular.module('app', []);
 
 app.controller("mainCtrl", function() {
-    this.prices = ['1.22$', '$3.33', '4.44'];
+    this.prices = ['1.22$', '$3.33', '4.44', '4.44', '4.44', '4.44', '4.44', '4.44'];
 });
 
 app.filter("moneyFilter", function() {
     return function(val) {
+
+        console.log(val);
         var lastChar = val.slice(-1);
         var firstChar = val.slice(0, 1);
         var slicedPart;

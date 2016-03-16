@@ -14,7 +14,7 @@
 
 <div ng-controller="mainCtrl as main">
     <ul>
-        <li ng-repeat="price in main.prices | limitTo:10 | orderBy:'-'" ng-cloak>
+        <li ng-repeat="price in main.prices | limitTo:10 | orderBy:'-' track by $index" ng-cloak>
             {{price | moneyFilter}}
         </li>
     </ul>

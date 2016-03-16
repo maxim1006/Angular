@@ -8,6 +8,15 @@
 </head>
 <body>
 
+<!--angular.element(node).scope().scopeMethod(); - так могу забрать метод и скоуп-->
+<!--console.dir(angular.element("custom-el").scope().__имя-контроллера__);-->
+
+<!--angular.module('app')._invokeQueue - все директивы и фабрики посмотреть-->
+
+<!--angular.element(document).injector().get("$rootScope") - так могу получить любой инжектор-->
+<!--angular.element(document).injector().get("$http")-->
+<!--angular.element(document).injector().get("factory") //так получаю фабрику-->
+<!--angular.element(document).injector().get("customElDirective") //а так получаю директиву (имя директивы + Directive) - директива - это таже фабрика с suffix Directive. Директив может быть несколько-->
 <!--angular.element('body').append(angular.element('html').injector().get('$compile')( "<nc-button text='Default'></nc-button>" )(angular.element('nc-button').scope())) так могу скомпилить новый объект-->
 
 <!--
