@@ -8,8 +8,19 @@
 </head>
 <body>
 
+<!--Пример компайла из доков-->
+<!--var $div = $('<div ng-controller="MyCtrl">{{content.label}}</div>');-->
+<!--$(document.body).append($div);-->
+
+<!--angular.element(document).injector().invoke(function($compile) {-->
+<!--var scope = angular.element($div).scope();-->
+<!--$compile($div)(scope);-->
+<!--});-->
+
+
+
 <!--angular.element(node).scope().scopeMethod(); - так могу забрать метод и скоуп-->
-<!--console.dir(angular.element("custom-el").scope().__имя-контроллера__);-->
+<!--console.dir(angular.element("custom-el").scope().(__имя-контроллера__);-->
 
 <!--angular.module('app')._invokeQueue - все директивы и фабрики посмотреть-->
 
