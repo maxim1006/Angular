@@ -13,6 +13,13 @@
 </head>
 <body>
 
+
+
+
+<!--Пример создания через injector() https://docs.angularjs.org/api/ng/function/angular.injector-->
+
+
+
 <!--Пример компайла из доков-->
 <!--var $div = $('<div ng-controller="MyCtrl">{{content.label}}</div>');-->
 <!--$(document.body).append($div);-->
@@ -36,9 +43,12 @@
 <!--angular.element('body').append(angular.element('html').injector().get('$compile')( "<nc-button text='Default'></nc-button>" )(angular.element('nc-button').scope())) так могу скомпилить новый объект-->
 
 <!--
-function MyService(){
+Пример injector
+angular.module('foo', []).service('simpleService', function(){ this.name = "foo"; });
+var fooSvc = angular.injector(['foo']).get('simpleService');
 
-}
+Пример $inject
+function MyService(){}
 MyService.$inject = ['$http'];
 
 angular.module('myapp')
