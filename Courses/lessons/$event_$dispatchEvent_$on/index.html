@@ -23,6 +23,9 @@
             return {
                 scope: {},
                 controller: function($scope) {
+
+                    this.number = 123;
+
                 },
                 link: function(scope, el, attrs) {
                     $rootScope.$emit('someEvent', ["from $rootScope $emit"]); //обязательно делаю это в линк, вызывает все someEvent в родительских
@@ -30,19 +33,24 @@
                     scope.$broadcast('someEvent', ["from outerDir $broadcast"]); //обязательно делаю это в линк
                     scope.$emit('someEvent', ["from outerDir $emit"]);
                 },
-                template: "<inner-dir></inner-dir>"
+                template: "<inner-dir number='{{outerDirCtrl.number}}'></inner-dir>",
+                controllerAs: "outerDirCtrl"
             };
         });
 
         angular.module('app').directive('innerDir', function($rootScope) {
             return {
                 scope: {},
-                controller: function($scope) {
+                bindToController: {
+                    number: "@"
                 },
+                controller: function($scope) {},
+                controllerAs: "innerDirCtrl",
                 link: function(scope, el, attrs) {
                     scope.$on('someEvent', function(event, data) { console.log("scope", data); });
                     $rootScope.$on('someEvent', function(event, data) { console.log("$rootScope", data); });
-                }
+                },
+                templateUrl: "innerDirTemplate.tpl.html"
             };
         });
 
