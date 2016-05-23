@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <title>Общая инфа</title>
     <script src="https://code.jquery.com/jquery-2.2.0.min.js"></script>
-    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.5/angular.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.0/angular.js"></script>
 </head>
 <body>
 
@@ -18,7 +18,28 @@
 <!--current-user - это то что передали, например из какого-то контроллера в директиву custom-directive, а значение могу получить уже внутри link-->
 <!--на смой директиве не могу использовать main.eq, типо current-user="main.eq" будет undefined-->
 
-<custom-directive current-user="123" user-equal-param="456"></custom-directive>
+<custom-directive current-user="123" user-equal-param="456" obj="[
+            {
+                value: 'value1',
+                disabled: false,
+                text: 'value1',
+                selected: true,
+                html: ''
+            },
+            {
+                value: 'value2',
+                disabled: true,
+                text: 'value2',
+                selected: false,
+                html: ''
+            },
+            {
+                value: 'value3',
+                disabled: false,
+                text: 'value3',
+                html: ''
+            }
+        ]"></custom-directive>
 
 <script>
     (function() {
@@ -41,7 +62,7 @@
                             this.a = $scope.user;
                             this.b = $scope.userEqualParam;
                         },
-                        template: "{{user}} {{main.a}} {{main.b}} <input type='text' ng-model='main.a'>",
+                        template: "{{user}} {{main.a}} {{main.b}} <input type='text' ng-model='main.a'> <br />{{main.obj[0].value}}{{main.obj[1].value}}{{main.obj[2].value}}",
                         link: function(scope, el, attrs) {
 
                             //console.log("testFactory from link", testFactory);
@@ -93,6 +114,9 @@
                             userEqualParam: "=", //если совпадает могу писать просто =
                             user1: "@currentUser", //передаем просто значение
                             user2: "&currentUser" //передаем колбек
+                        },
+                        bindToController: {
+                            obj: "<"
                         }
                     };
                 });
