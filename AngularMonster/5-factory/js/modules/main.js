@@ -1,12 +1,18 @@
 var app = angular.module('app', []);
 
-app.controller('myCtrl', function($scope, myFactory) {
-    $scope.name = "Max";
-    $scope.age = 27;
+app.directive('myCtrl', function() {
+    return {
+         controller: function($scope, myFactory) {
+             this.name = "Max";
+             this.age = 27;
 
-    //чтобы использовать фабрику, нужно поместить ее в scope
-    $scope.myFactory = myFactory;
-    console.log($scope);
+             //чтобы использовать фабрику, нужно поместить ее в scope
+             this.myFactory = myFactory;
+             console.log($scope);
+         },
+        controllerAs: "$ctrl"
+    }
+
 });
 
 app.controller('myCtrl2', function($scope, myFactory) {
