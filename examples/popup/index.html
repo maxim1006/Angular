@@ -105,7 +105,7 @@
 
                         /*Helpers*/
                         function onUserNameClick(e) {
-                            if (el !== e.target && !el[0].contains(e.target)) {
+                            if (el[0] !== e.target && !el[0].contains(e.target)) {
                                 scope.$apply(function () {
                                     ctrl.visibleLogout = false;
                                 });
