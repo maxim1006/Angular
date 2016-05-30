@@ -18,7 +18,7 @@
 <!--current-user - это то что передали, например из какого-то контроллера в директиву custom-directive, а значение могу получить уже внутри link-->
 <!--на смой директиве не могу использовать main.eq, типо current-user="main.eq" будет undefined-->
 
-<custom-directive current-user="123" user-equal-param="456" obj="[
+<custom-directive current-user="123" user-equal-param="456" arr="[
             {
                 value: 'value1',
                 disabled: false,
@@ -39,7 +39,14 @@
                 text: 'value3',
                 html: ''
             }
-        ]"></custom-directive>
+        ]" obj="{a:1, b:2}" obj1="{a:1, b:2}" arr1="[
+            {
+                value: 'value1',
+                disabled: false,
+                text: 'value1',
+                selected: true,
+                html: ''
+            }]"></custom-directive>
 
 <script>
     (function() {
@@ -59,12 +66,16 @@
                             console.log("$scope from controller", $scope);
                             console.log("testFactory from controller", testFactory);
 
+                            console.log(this.arr(), "self.arr");
+                            console.log(this.arr1, "self.arr");
+                            console.log(this.obj(), "self.obj");
+                            console.log(this.obj1, "self.obj1");
+
                             this.a = $scope.user;
                             this.b = $scope.userEqualParam;
                         },
-                        template: "{{user}} {{main.a}} {{main.b}} <input type='text' ng-model='main.a'> <br />{{main.obj[0].value}}{{main.obj[1].value}}{{main.obj[2].value}}",
+                        template: "{{user}} {{main.a}} {{main.b}} <input type='text' ng-model='main.a'> <br />{{main.obj[0].value}}{{main.obj[1].value}}{{main.obj[2].value}} {{main.obj}}",
                         link: function(scope, el, attrs) {
-
                             //console.log("testFactory from link", testFactory);
                             console.log("scope from directive", scope);
 
@@ -116,7 +127,10 @@
                             user2: "&currentUser" //передаем колбек
                         },
                         bindToController: {
-                            obj: "<"
+                            obj: "&",
+                            obj1: "<",
+                            arr: "&",
+                            arr1: "<"
                         }
                     };
                 });
