@@ -1,0 +1,49 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Document</title>
+</head>
+<body>
+
+<!--
+
+
+/***Need for proper XHR***/
+        $httpProvider.defaults.useXDomain = false;
+        $httpProvider.defaults.withCredentials = false;
+        delete $httpProvider.defaults.headers.common['X-Requested-With'];
+
+
+
+        //это если хочу отключить OPTIONS
+        $httpProvider.defaults.headers.common = {};
+        $httpProvider.defaults.headers.post = {};
+        $httpProvider.defaults.headers.put = {};
+        $httpProvider.defaults.headers.patch = {};
+
+
+
+        //url encoded data
+        $http.post(loginUrl, "userName=" + encodeURIComponent(email) +
+                     "&password=" + encodeURIComponent(password) +
+                     "&grant_type=password"
+).success(function (data) {
+
+
+
+        //если хочу доп опции то передаю так
+        $http({
+            method: 'POST',
+            url: restServiceFactory.reviewOrder,
+            data: quoteFactory.getQuote(),
+            headers: {
+                'content-type': 'application/json'
+            }
+        })
+        /************************/
+-->
+
+
+</body>
+</html>
