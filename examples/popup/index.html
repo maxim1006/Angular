@@ -98,7 +98,7 @@
                         $document.on('click', onUserNameClick);
 
                         scope.$on('$destroy', function() {
-                            $document.off('click', eventHandler);
+                            $document.off('click', onUserNameClick);
                         });
 
 

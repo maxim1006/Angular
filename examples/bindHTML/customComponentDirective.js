@@ -51,10 +51,7 @@
 
                 controllerAs: "$ctrl",
 
-                template: `
-                    <div class="custom-component" bind-html-compile="$ctrl.html"></div>
-                    <div class="custom-component" ng-bind-html="$ctrl.renderHTML($ctrl.html1)"></div>
-                `
+                templateUrl: './customComponent.tmpl.html'
 
             }
         });
