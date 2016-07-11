@@ -1,0 +1,137 @@
+<!doctype html>
+<html ng-app="app">
+<head>
+    <meta charset="UTF-8">
+    <title>Accordion example</title>
+    <script src="https://code.jquery.com/jquery-2.2.0.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.6/angular.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.6/angular-animate.min.js"></script>
+</head>
+<body>
+<style>
+    * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+    }
+
+    .example {
+        margin: 200px;
+    }
+
+    .example__row {
+        margin-top: 20px;
+    }
+
+    accordion-wrapper {
+        display: block;
+    }
+
+    .accordion-item__header {
+        position: relative;
+        padding: 10px 10px 12px 30px;
+        border-top: 1px solid #E4E4E4;
+        background-color: #F4F4F4;
+        font-size: 11px;
+        line-height: 15px;
+        font-family: Gibson, Helvetica, Arial, sans-serif;
+        font-weight: 700;
+        font-style: normal;
+        color: #333;
+        cursor: pointer;
+        -webkit-user-select: none;
+        -moz-user-select: none;
+        -ms-user-select: none;
+        user-select: none;
+    }
+    .accordion-item__header:before {
+        content: '';
+        position: absolute;
+        top: 50%;
+        margin-top: -6px;
+        left: 12px;
+        width: 13px;
+        height: 11px;
+        background: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAA0AAAALCAYAAACksgdhAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAA25pVFh0WE1MOmNvbS5hZG9iZS54bXAAAAAAADw/eHBhY2tldCBiZWdpbj0i77u/IiBpZD0iVzVNME1wQ2VoaUh6cmVTek5UY3prYzlkIj8+IDx4OnhtcG1ldGEgeG1sbnM6eD0iYWRvYmU6bnM6bWV0YS8iIHg6eG1wdGs9IkFkb2JlIFhNUCBDb3JlIDUuNi1jMTExIDc5LjE1ODMyNSwgMjAxNS8wOS8xMC0wMToxMDoyMCAgICAgICAgIj4gPHJkZjpSREYgeG1sbnM6cmRmPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5LzAyLzIyLXJkZi1zeW50YXgtbnMjIj4gPHJkZjpEZXNjcmlwdGlvbiByZGY6YWJvdXQ9IiIgeG1sbnM6eG1wTU09Imh0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC9tbS8iIHhtbG5zOnN0UmVmPSJodHRwOi8vbnMuYWRvYmUuY29tL3hhcC8xLjAvc1R5cGUvUmVzb3VyY2VSZWYjIiB4bWxuczp4bXA9Imh0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC8iIHhtcE1NOk9yaWdpbmFsRG9jdW1lbnRJRD0ieG1wLmRpZDowNWZhMzliYi1iZjkxLWU5NDktYWRiMy0zZDk1YzlkZjI2YTciIHhtcE1NOkRvY3VtZW50SUQ9InhtcC5kaWQ6NkQwMjlENDNDNDJEMTFFNUJFMENDNTAzMzREQTMwRkYiIHhtcE1NOkluc3RhbmNlSUQ9InhtcC5paWQ6NkQwMjlENDJDNDJEMTFFNUJFMENDNTAzMzREQTMwRkYiIHhtcDpDcmVhdG9yVG9vbD0iQWRvYmUgUGhvdG9zaG9wIENDIDIwMTUgKFdpbmRvd3MpIj4gPHhtcE1NOkRlcml2ZWRGcm9tIHN0UmVmOmluc3RhbmNlSUQ9InhtcC5paWQ6M0FEOUJCQTJDNDJEMTFFNTg0NzVEQUVCOTdDMzlCNUEiIHN0UmVmOmRvY3VtZW50SUQ9InhtcC5kaWQ6M0FEOUJCQTNDNDJEMTFFNTg0NzVEQUVCOTdDMzlCNUEiLz4gPC9yZGY6RGVzY3JpcHRpb24+IDwvcmRmOlJERj4gPC94OnhtcG1ldGE+IDw/eHBhY2tldCBlbmQ9InIiPz53TjIIAAAAv0lEQVR42mL8//8/A8kApAmE16xZA+KyArEDEOcBcTkQ5wKxPUgcJA9TywiziZGRkQ1IxQPxTyA+AMTvgFgYagjIsIVAtb9RbAICRyBOAOmH2toApRmBOAlkI0wtE5JL9YD4EFAhiieh/INArA8TQ3ZeLZCaCMRFWLzeD/IfUG0LuvPygVgJ5CRk50HZyqDAwea8SyB/hYSEIIsxAPnMUP9exOY8WOgxQEPvBRBLQDX8wxp6WOKpnmA8kQIAAgwApr98H5k9BQMAAAAASUVORK5CYII=") 0 0 no-repeat;
+    }
+    .accordion-item__inner_opened .accordion-item__header:before {
+        background: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAA0AAAALCAYAAACksgdhAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAA25pVFh0WE1MOmNvbS5hZG9iZS54bXAAAAAAADw/eHBhY2tldCBiZWdpbj0i77u/IiBpZD0iVzVNME1wQ2VoaUh6cmVTek5UY3prYzlkIj8+IDx4OnhtcG1ldGEgeG1sbnM6eD0iYWRvYmU6bnM6bWV0YS8iIHg6eG1wdGs9IkFkb2JlIFhNUCBDb3JlIDUuNi1jMTExIDc5LjE1ODMyNSwgMjAxNS8wOS8xMC0wMToxMDoyMCAgICAgICAgIj4gPHJkZjpSREYgeG1sbnM6cmRmPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5LzAyLzIyLXJkZi1zeW50YXgtbnMjIj4gPHJkZjpEZXNjcmlwdGlvbiByZGY6YWJvdXQ9IiIgeG1sbnM6eG1wTU09Imh0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC9tbS8iIHhtbG5zOnN0UmVmPSJodHRwOi8vbnMuYWRvYmUuY29tL3hhcC8xLjAvc1R5cGUvUmVzb3VyY2VSZWYjIiB4bWxuczp4bXA9Imh0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC8iIHhtcE1NOk9yaWdpbmFsRG9jdW1lbnRJRD0ieG1wLmRpZDowNWZhMzliYi1iZjkxLWU5NDktYWRiMy0zZDk1YzlkZjI2YTciIHhtcE1NOkRvY3VtZW50SUQ9InhtcC5kaWQ6ODNERUY4NjNDNDJEMTFFNUIzRjlFQUM5MDY0OEY2OUUiIHhtcE1NOkluc3RhbmNlSUQ9InhtcC5paWQ6ODNERUY4NjJDNDJEMTFFNUIzRjlFQUM5MDY0OEY2OUUiIHhtcDpDcmVhdG9yVG9vbD0iQWRvYmUgUGhvdG9zaG9wIENDIDIwMTUgKFdpbmRvd3MpIj4gPHhtcE1NOkRlcml2ZWRGcm9tIHN0UmVmOmluc3RhbmNlSUQ9InhtcC5paWQ6M0FEOUJCQTJDNDJEMTFFNTg0NzVEQUVCOTdDMzlCNUEiIHN0UmVmOmRvY3VtZW50SUQ9InhtcC5kaWQ6M0FEOUJCQTNDNDJEMTFFNTg0NzVEQUVCOTdDMzlCNUEiLz4gPC9yZGY6RGVzY3JpcHRpb24+IDwvcmRmOlJERj4gPC94OnhtcG1ldGE+IDw/eHBhY2tldCBlbmQ9InIiPz6+7usUAAAAwElEQVR42mL8//8/A8kApAmE16xZA+KyArEDEOcBcTkQ5wKxPUgcJA9TywiziZGRkQ1IxQPxTyA+AMTvgFgYagjIsIVAtb/BapE0OQIpeZAk0FS4m0NCQhiBVCIQ3wWqPQgSY0JyqR4QH0LWAAJQPkixPkyMBUmeD4jfAE1uwOL1fqg8hqZPQCwCNBlDE9AgZag8A7rzLgGxI1ABE5oGZpA4EF+EiWELPQZo6L0AYgmohn/IoYcvnuoJxhMpACDAAJRXYW9ZLALXAAAAAElFTkSuQmCC") 0 0 no-repeat;
+    }
+    .accordion-item__inner_visible .accordion-item__header {
+        padding: 10px;
+    }
+    .accordion-item__inner_visible .accordion-item__header:before {
+        content: none;
+    }
+</style>
+
+
+<accordion-wrapper></accordion-wrapper>
+
+<script>
+
+    (function() {
+
+        angular.module('app', []);
+
+
+        angular.module('app')
+                .directive('accordionWrapper', function() {
+                    return {
+                        scope: {},
+
+                        bindToController: {},
+
+                        controller: function() {
+
+                            var self = this;
+
+                        },
+
+                        controllerAs: "accordionWrapperCtrl",
+
+                        link: function(scope, el, attrs, ctrl) {
+                        },
+
+                        template: `
+                            <div class="example">
+                                <div class="example__row">
+                                    <accordion-set class="accordion-set-wrapper">
+
+                                        <accordion-item
+                                                class="accordion-item"
+                                                custom-title="title 1"
+                                        >
+                                            Content 1
+                                        </accordion-item>
+
+                                        <accordion-item
+                                                class="accordion-item"
+                                                custom-title="title 1"
+                                        >
+                                            Content 2
+                                        </accordion-item>
+
+                                        <accordion-item
+                                                class="accordion-item"
+                                                custom-title="title 1"
+                                        >
+                                            Content 3
+                                        </accordion-item>
+
+                                    </accordion-set>
+                                </div>
+                            </div>
+                        `
+                    };
+                });
+
+    })();
+
+</script>
+
+<script src="./item/accordionItemDirective.js"></script>
+<script src="./set/accordionSetDirective.js"></script>
+
+</body>
+</html>

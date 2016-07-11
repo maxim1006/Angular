@@ -1,0 +1,16 @@
+<div
+    class="accordion-item__inner"
+    ng-class="{
+        'accordion-item__inner_opened': opened
+    }"
+>
+
+    <div class="accordion-item__header" ng-click="toggle(item)">
+        {{customTitle}}
+    </div>
+
+    <div class="accordion-item__body" ng-if="opened">
+        <ng-transclude></ng-transclude>
+    </div>
+
+</div>
