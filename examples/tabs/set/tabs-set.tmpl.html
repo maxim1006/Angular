@@ -1,0 +1,17 @@
+<div class="tabs-set {{tabsSetCtrl.customTabsSetClass}}">
+    <ul class="tabs-set__list {{tabsSetCtrl.customListClass}}">
+        <li class="tabs-set__tab taTab"
+            ng-repeat="tab in tabsSetCtrl.tabs"
+            ng-click="tabsSetCtrl.select(tab)"
+            ng-class="{'tabs-set__tab_active': tab.active}">
+                <div class="tabs-set__tab-img"
+                     ng-if="tab.img"
+                     ng-style="{'background-image':'url(./images/bundles/{{tab.customTitle}}.png)'}"
+                >
+                </div>
+                {{tab.customTitle}}
+        </li>
+    </ul>
+
+    <ng-transclude></ng-transclude>
+</div>

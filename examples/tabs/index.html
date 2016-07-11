@@ -1,0 +1,117 @@
+<!doctype html>
+<html ng-app="app">
+<head>
+    <meta charset="UTF-8">
+    <title>Tabs example</title>
+    <script src="https://code.jquery.com/jquery-2.2.0.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.6/angular.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.6/angular-animate.min.js"></script>
+</head>
+<body>
+<style>
+    * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+    }
+
+    .example__row {
+        margin-top: 20px;
+    }
+
+    tabs-wrapper {
+        display: block;
+    }
+
+    .tabs-set__tab {
+        display: inline-block;
+        vertical-align: top;
+        padding: 0 25px;
+        white-space: nowrap;
+        font-size: 12px;
+        line-height: 30px;
+        color: #000;
+        text-align: center;
+        cursor: pointer;
+        -webkit-user-select: none;
+        -moz-user-select: none;
+        -ms-user-select: none;
+        user-select: none;
+        font-family: Gibson, Helvetica, Arial, sans-serif;
+        font-weight: 700;
+        font-style: normal;
+    }
+
+    .tabs-set__tab_active {
+        border-radius: 20px;
+        background-color: #3F8DCF;
+        cursor: default;
+        color: #fff;
+    }
+
+    .tabs-item {
+        padding: 25px 70px 30px 30px;
+    }
+
+</style>
+
+
+<tabs-wrapper></tabs-wrapper>
+
+<script>
+
+    (function() {
+
+        angular.module('app', []);
+
+
+        angular.module('app')
+                .directive('tabsWrapper', function() {
+                    return {
+                        scope: {},
+
+                        bindToController: {},
+
+                        controller: function() {
+
+                            var self = this;
+
+                        },
+
+                        controllerAs: "selectWrapperCtrl",
+
+                        link: function(scope, el, attrs, ctrl) {
+                        },
+
+                        template: `
+                                <div class="example__row">
+                                    <tabs-set class="tabs-set-wrapper">
+
+                                        <tabs-item class="tabs-item-wrapper" custom-title="tab 1">
+                                            Tab content 1
+                                        </tabs-item>
+
+                                        <tabs-item class="tabs-item-wrapper" custom-title="tab 2">
+                                            Tab content 2
+                                        </tabs-item>
+
+                                        <tabs-item class="tabs-item-wrapper" custom-title="tab 3">
+                                            Tab content 3
+                                        </tabs-item>
+
+                                    </tabs-set>
+
+                                </div>
+                        `,
+                    };
+                });
+
+    })();
+
+</script>
+
+<script src="./item/tabsItemDirective.js"></script>
+<script src="./set/tabsSetDirective.js"></script>
+
+</body>
+</html>
