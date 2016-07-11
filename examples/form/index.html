@@ -33,10 +33,11 @@
                         var self = this;
 
                         self.onSubmit = function(data) {
+                            console.dir($q);
                             console.log($q.reject(data));
                             console.log($q.defer());
                             console.log($q.defer().promise);
-                            $q.reject(data).then(function(data) {
+                            $q.resolve(data).then(function(data) {
                                 console.log("post success", data);
                             },
                             function(err) {

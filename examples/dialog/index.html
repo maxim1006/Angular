@@ -1,0 +1,170 @@
+<!doctype html>
+<html ng-app="app">
+<head>
+    <meta charset="UTF-8">
+    <title>Dialog example</title>
+    <script src="https://code.jquery.com/jquery-2.2.0.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.6/angular.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.6/angular-animate.min.js"></script>
+</head>
+<body>
+<style>
+    .dialog {
+        display: inline-block;
+        vertical-align: middle;
+        width: 335px;
+        margin: 20px auto;
+        padding: 20px 30px 30px 30px;
+        background-color: #fff;
+        border: 2px solid #d1d7da;
+        -webkit-box-shadow: 0 23px 95px rgba(0, 0, 0, 0.78);
+        box-shadow: 0 23px 95px rgba(0, 0, 0, 0.78);
+        -webkit-transition: all 200ms ease;
+        transition: all 200ms ease;
+        text-align: left;
+    }
+    .dialog-wrapper_create-offering .dialog {
+        width: 1020px;
+        padding: 0;
+        border: none;
+    }
+    .dialog__header {
+        font-size: 0;
+        padding: 16px 0 15px;
+    }
+    .dialog__header:after {
+        content: '';
+        display: table;
+        width: 100%;
+        clear: both;
+    }
+    .dialog-wrapper_create-offering .dialog__header {
+        display: none;
+    }
+    .dialog__header-left {
+        display: inline-block;
+        vertical-align: top;
+    }
+    .dialog__header-right {
+        float: right;
+    }
+    .dialog__subheader {
+        padding: 20px 0;
+    }
+    .dialog__title {
+        font-size: 20px;
+        line-height: 20px;
+        font-weight: 700;
+    }
+    .dialog__close {
+        position: relative;
+        padding-right: 17px;
+        color: #e5475a;
+        font-size: 14px;
+        line-height: 20px;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        cursor: pointer;
+    }
+    .dialog__close:hover {
+        opacity: 0.7;
+    }
+    .dialog__close:after {
+        content: '';
+        position: absolute;
+        right: 0;
+        top: 50%;
+        margin-top: -5px;
+        background: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAoAAAAKBAMAAAB/HNKOAAAAElBMVEXlR1rlR1oAAADlR1rlR1rlR1pjyRGyAAAABXRSTlPSFQC9LUItAaUAAAAvSURBVAjXY3AWUlI0YTBlVBIIZhAIEGRlZFBkZQgQYlASCGVUgpAQEYgsRCVEFwC/mgZhL+2yxQAAAABJRU5ErkJggg==") 0 0 no-repeat;
+        width: 10px;
+        height: 10px;
+    }
+    .dialog-wrapper {
+        position: fixed;
+        top: 0;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        background: rgba(0, 0, 0, 0.4);
+        z-index: 1000;
+        overflow: auto;
+        text-align: center;
+    }
+    .dialog-wrapper:before {
+        content: '';
+        display: inline-block;
+        vertical-align: top;
+        height: 100%;
+    }
+    .dialog-wrapper.ng-hide-add,
+    .dialog-wrapper.ng-hide-remove {
+        -webkit-transition: all linear 0.2s;
+        transition: all linear 0.2s;
+    }
+    .dialog-wrapper .dialog {
+        -webkit-transform: translateY(0);
+        -ms-transform: translateY(0);
+        transform: translateY(0);
+    }
+    .dialog-wrapper.ng-hide {
+        opacity: 0;
+    }
+    .dialog-wrapper.ng-hide .dialog {
+        -webkit-transform: translateY(-100%);
+        -ms-transform: translateY(-100%);
+        transform: translateY(-100%);
+    }
+</style>
+
+
+<popup-open></popup-open>
+
+<dialog-wrap></dialog-wrap>
+
+<script>
+
+    (function() {
+
+        angular.module('app', ['ngAnimate']);
+
+
+        angular.module('app')
+                .directive('popupOpen', function(dialogWrapFactory) {
+                    return {
+                        scope: {},
+
+                        bindToController: {},
+
+                        controller: function() {
+
+                            var self = this;
+
+                            self.openDialog = function(e) {
+                                e.preventDefault();
+                                dialogWrapFactory.open("./simple/simple-dialog.tmpl.html", {
+                                    modificator: "dialog-wrapper_modificator"
+                                });
+                            };
+                        },
+
+                        controllerAs: "popupOpenCtrl",
+
+                        link: function(scope, el, attrs, ctrl) {
+                        },
+
+                        template: `
+                                <a href="#" ng-click="popupOpenCtrl.openDialog($event)">Open popup</a>
+                        `,
+                    };
+                });
+
+    })();
+
+</script>
+
+<script src="./wrap/dialogWrapDirective.js"></script>
+<script src="./wrap/dialogWrapFactory.js"></script>
+<script src="./simple/SimpleDialogController.js"></script>
+
+</body>
+</html>

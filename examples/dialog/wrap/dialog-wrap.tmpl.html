@@ -1,0 +1,13 @@
+<div class="dialog-wrapper ng-hide {{dialogWrapCtrl.dialogParams().modificator}}" ng-show="dialogWrapCtrl.show()">
+    <div class="dialog jsDialogBody taPopup">
+        <div class="dialog__header {{dialogWrapCtrl.dialogParams().headerModificator}}">
+            <div class="dialog__header-left">
+                <span class="dialog__title taLabel">{{dialogWrapCtrl.dialogParams().title}}</span>
+            </div>
+            <div class="dialog__header-right">
+                <span class="dialog__close taButton" ng-click="dialogWrapCtrl.close()">Close</span>
+            </div>
+        </div>
+        <div ng-include="dialogWrapCtrl.storage.getTemplateUrl()"></div>
+    </div>
+</div>

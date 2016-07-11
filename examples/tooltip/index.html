@@ -2,7 +2,7 @@
 <html ng-app="app">
 <head>
     <meta charset="UTF-8">
-    <title>Общая инфа</title>
+    <title>Tooltip example</title>
     <script src="https://code.jquery.com/jquery-2.2.0.min.js"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.0/angular.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/angular-ui-router/0.2.18/angular-ui-router.js"></script>
@@ -12,13 +12,13 @@
 
 </style>
 
-    <popup-main></popup-main>
+    <tooltip-main></tooltip-main>
 
     <p></p>
     <p></p>
     <p></p>
 
-    <popup-second></popup-second>
+    <tooltip-second></tooltip-second>
 
 
 <script>
@@ -29,7 +29,7 @@
 
 
         angular.module('app')
-            .directive('popupMain', function($timeout) {
+            .directive('tooltipMain', function($timeout) {
                 return {
                     scope: {},
 
@@ -38,7 +38,7 @@
                     controller: function() {
                     },
 
-                    controllerAs: "popupMainCtrl",
+                    controllerAs: "tooltipMainCtrl",
 
                     link: function(scope, el, attrs, ctrl) {
                         ctrl.onBlur = function() {
@@ -53,7 +53,7 @@
                                 ctrl.isVisible = true;
 
                                 $timeout(function() {
-                                    el[0].querySelector(".popup").focus();
+                                    el[0].querySelector(".tooltip").focus();
                                 });
                             }
 
@@ -62,11 +62,11 @@
 
                     template: `
 
-                        <span ng-mousedown="popupMainCtrl.onShow()">Show popup</span>
+                        <span ng-mousedown="tooltipMainCtrl.onShow()">Show tooltip</span>
 
-                        <div class="popup" tabindex="-1"
-                        ng-show="popupMainCtrl.isVisible"
-                        ng-blur="popupMainCtrl.onBlur($event)"
+                        <div class="tooltip" tabindex="-1"
+                        ng-show="tooltipMainCtrl.isVisible"
+                        ng-blur="tooltipMainCtrl.onBlur($event)"
                         >
 
                         Popup
@@ -79,7 +79,7 @@
 
 
 
-            .directive('popupSecond', function($document) {
+            .directive('tooltipSecond', function($document) {
                 return {
                     scope: {},
 
@@ -88,7 +88,7 @@
                     controller: function() {
                     },
 
-                    controllerAs: "popupSecondCtrl",
+                    controllerAs: "tooltipSecondCtrl",
 
                     link: function(scope, el, attrs, ctrl) {
                         scope.onPopupTriggerClick = function() {
@@ -115,10 +115,10 @@
 
                     template: `
 
-                    <span ng-click="onPopupTriggerClick()">Show popup</span>
+                    <span ng-click="onPopupTriggerClick()">Show tooltip</span>
 
-                    <div class="popup" tabindex="-1"
-                    ng-show="popupSecondCtrl.visibleLogout"
+                    <div class="tooltip" tabindex="-1"
+                    ng-show="tooltipSecondCtrl.visibleLogout"
                     >
 
                     Popup
