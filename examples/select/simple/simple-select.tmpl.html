@@ -1,0 +1,29 @@
+<div class="simple-select" value="{{simpleSelectCtrl.currentValue.value}}"
+     ng-class="{
+        'simple-select_opened': simpleSelectCtrl.isOpened,
+        'simple-select_empty': !simpleSelectCtrl.options.length
+     }"
+>
+    <div class="simple-select__inner">
+        <div class="simple-select__header" ng-click="simpleSelectCtrl.onHeaderClick()">
+             <div class="simple-select__header-value">
+                {{simpleSelectCtrl.currentValue.name}}
+             </div>
+        </div>
+        <div class="simple-select__body" ng-show="simpleSelectCtrl.isOpened && simpleSelectCtrl.options.length > 0">
+            <ul class="simple-select__list">
+                <li
+                    class="simple-select__item"
+                    ng-repeat="option in simpleSelectCtrl.options track by $index"
+                    ng-class="{
+                        'simple-select__item_selected': option.name === simpleSelectCtrl.getCurrentName()
+                    }"
+                >
+                    <div class="simple-select__item-content" ng-click="simpleSelectCtrl.onItemClick(option)">
+                        {{option.name}}
+                    </div>
+                </li>
+            </ul>
+        </div>
+    </div>
+</div>

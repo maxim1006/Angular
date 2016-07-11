@@ -1,0 +1,159 @@
+<!doctype html>
+<html ng-app="app">
+<head>
+    <meta charset="UTF-8">
+    <title>Select example</title>
+    <script src="https://code.jquery.com/jquery-2.2.0.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.6/angular.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.6/angular-animate.min.js"></script>
+</head>
+<body>
+<style>
+    * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+    }
+
+    .example__row {
+        margin-top: 20px;
+    }
+
+    select-wrapper {
+        display: block;
+        width: 200px;
+    }
+
+    .simple-select {
+        position: relative;
+        cursor: pointer;
+    }
+    .simple-select_empty {
+        opacity: 0.4;
+        cursor: default;
+    }
+    .simple-select__header {
+        position: relative;
+        width: 100%;
+        height: 30px;
+        padding: 0 28px 0 10px;
+        font-size: 14px;
+        line-height: 28px;
+        border-bottom: 1px solid #c2ccd3;
+        background-color: #f1f5f7;
+        -webkit-user-select: none;
+        -moz-user-select: none;
+        -ms-user-select: none;
+        user-select: none;
+    }
+    .simple-select__header:after {
+        content: '';
+        position: absolute;
+        right: 10px;
+        top: 50%;
+        margin-top: -4px;
+        width: 8px;
+        height: 6px;
+        background: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAgAAAAGCAYAAAD+Bd/7AAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAA4RpVFh0WE1MOmNvbS5hZG9iZS54bXAAAAAAADw/eHBhY2tldCBiZWdpbj0i77u/IiBpZD0iVzVNME1wQ2VoaUh6cmVTek5UY3prYzlkIj8+IDx4OnhtcG1ldGEgeG1sbnM6eD0iYWRvYmU6bnM6bWV0YS8iIHg6eG1wdGs9IkFkb2JlIFhNUCBDb3JlIDUuNi1jMDY3IDc5LjE1Nzc0NywgMjAxNS8wMy8zMC0yMzo0MDo0MiAgICAgICAgIj4gPHJkZjpSREYgeG1sbnM6cmRmPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5LzAyLzIyLXJkZi1zeW50YXgtbnMjIj4gPHJkZjpEZXNjcmlwdGlvbiByZGY6YWJvdXQ9IiIgeG1sbnM6eG1wTU09Imh0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC9tbS8iIHhtbG5zOnN0UmVmPSJodHRwOi8vbnMuYWRvYmUuY29tL3hhcC8xLjAvc1R5cGUvUmVzb3VyY2VSZWYjIiB4bWxuczp4bXA9Imh0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC8iIHhtcE1NOk9yaWdpbmFsRG9jdW1lbnRJRD0ieG1wLmRpZDpjNzdhNWUzYy0zNGRjLWE3NDMtODkyYi1lZjY5M2JlODQwZGUiIHhtcE1NOkRvY3VtZW50SUQ9InhtcC5kaWQ6MkQ0RkE2RDI0NDA0MTFFNkEwRkVBNDI0NjcyNEJERjAiIHhtcE1NOkluc3RhbmNlSUQ9InhtcC5paWQ6MkQ0RkE2RDE0NDA0MTFFNkEwRkVBNDI0NjcyNEJERjAiIHhtcDpDcmVhdG9yVG9vbD0iQWRvYmUgUGhvdG9zaG9wIENDIDIwMTUgKFdpbmRvd3MpIj4gPHhtcE1NOkRlcml2ZWRGcm9tIHN0UmVmOmluc3RhbmNlSUQ9InhtcC5paWQ6MjFkMWUzOTYtMDNlNS04MTQ2LWE2YmEtMDg5ZmFiNDgwNjNiIiBzdFJlZjpkb2N1bWVudElEPSJhZG9iZTpkb2NpZDpwaG90b3Nob3A6NDgwODc3NjUtMzk2Yy0xMWU2LThjMjktZGFkZGE2OTMzYTgyIi8+IDwvcmRmOkRlc2NyaXB0aW9uPiA8L3JkZjpSREY+IDwveDp4bXBtZXRhPiA8P3hwYWNrZXQgZW5kPSJyIj8+6uMoewAAAGhJREFUeNpinDWphwEfYAJiYyA+AMQySOKyUDFjFiDRAMT2QHwEiN2BmBGIdwCxPEgOpCAMiFcAsR8QH4aaIArEm4A4AmTFdyAOBuKFUAlRKBsk9p0FquMPECcC8VuoFcVA/B8kARBgAPT9EfZKx2L0AAAAAElFTkSuQmCC") 0 0 no-repeat;
+        -webkit-transition: -webkit-transform 0.2s;
+        transition: transform 0.2s;
+    }
+    .simple-select_opened .simple-select__header:after {
+        -webkit-transform: rotate(180deg);
+        -ms-transform: rotate(180deg);
+        transform: rotate(180deg);
+    }
+    .simple-select__body {
+        position: absolute;
+        top: 100%;
+        left: 0;
+        right: 0;
+        margin-top: 5px;
+        -webkit-box-shadow: 0 0 1px 2px rgba(0, 0, 0, 0.1);
+        box-shadow: 0 0 1px 2px rgba(0, 0, 0, 0.1);
+        background-color: #fff;
+        z-index: 100;
+    }
+    .simple-select__list {
+        list-style-type: none;
+    }
+    .simple-select__item {
+        padding: 0 10px;
+        line-height: 30px;
+        cursor: pointer;
+    }
+    .simple-select__item:hover {
+        background-color: #f1f1f1;
+    }
+    .simple-select__item_selected {
+        background-color: #f1f1f1;
+        cursor: default;
+    }
+    .simple-select__item-content {
+        font-size: 14px;
+        color: #57738a;
+    }
+</style>
+
+
+<select-wrapper></select-wrapper>
+
+<script>
+
+    (function() {
+
+        angular.module('app', []);
+
+
+        angular.module('app')
+                .directive('selectWrapper', function() {
+                    return {
+                        scope: {},
+
+                        bindToController: {},
+
+                        controller: function() {
+
+                            var self = this;
+
+                            self.currentValue = {name: "Option 1", value: "value 1"};
+                            self.currentValue1 = {name: "Option 2", value: "value 2"};
+
+                            self.options = [
+                                {name: "Option 1", value: "value 1"},
+                                {name: "Option 2", value: "value 2"},
+                                {name: "Option 3", value: "value 3"}
+                            ];
+
+                            self.options1 = [
+                                {name: "Option 1", value: "value 1"},
+                                {name: "Option 2", value: "value 2"},
+                                {name: "Option 3", value: "value 3"}
+                            ];
+
+                        },
+
+                        controllerAs: "selectWrapperCtrl",
+
+                        link: function(scope, el, attrs, ctrl) {
+                        },
+
+                        template: `
+                                <div class="example__row">
+                                    <simple-select current-value="selectWrapperCtrl.currentValue" options="selectWrapperCtrl.options"></simple-select>
+                                </div>
+                                <div class="example__row">
+                                    <simple-select internal="true" current-value="selectWrapperCtrl.currentValue1" options="selectWrapperCtrl.options1"></simple-select>
+                                </div>
+                        `,
+                    };
+                });
+
+    })();
+
+</script>
+
+<script src="./simple/simpleSelectDirective.js"></script>
+
+</body>
+</html>
