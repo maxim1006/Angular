@@ -18,13 +18,6 @@ angular.module('app').directive('simpleSelect', function simpleSelectDirective($
                 }
             });
 
-            self.onHeaderClick = function() {
-
-                if (!self.options || !self.options.length) return;
-
-                self.isOpened = !self.isOpened;
-            };
-
             self.onItemClick = function(option) {
                 self.currentValue = option;
                 self.isOpened = !self.isOpened;
@@ -46,14 +39,27 @@ angular.module('app').directive('simpleSelect', function simpleSelectDirective($
             //append selectBody to body
             if (!ctrl.internal) {
                 $body.append($selectBody);
-
-                $selectBody.css({
-                    'top': $selectHeader.offset().top,
-                    'left': $selectHeader.offset().left,
-                    'width': $selectHeader.outerWidth(),
-                    'marginTop': $selectHeader.height() + 5
-                });
             }
+
+            ctrl.onHeaderClick = function() {
+
+                if (!ctrl.options || !ctrl.options.length) return;
+
+                //set Position of select
+                if (!ctrl.isOpened && !ctrl.internal) {
+                    $body.append($selectBody);
+
+                    $selectBody.css({
+                        'top': $selectHeader.offset().top,
+                        'left': $selectHeader.offset().left,
+                        'width': $selectHeader.outerWidth(),
+                        'marginTop': $selectHeader.height() + 5
+                    });
+                }
+
+                ctrl.isOpened = !ctrl.isOpened;
+            };
+
 
             $document
                 .on('click.select', onDocumentClick)
