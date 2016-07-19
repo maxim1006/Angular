@@ -37,20 +37,46 @@
                 })
 
                 //а могу написать почище
-                .directive("innerDirCleaner", function() {
+                .directive("innerDirCleaner", function(testFactory1) {
                     return {
                         scope: {},
                         bindToController: {
                             name: "=userName"
                         },
                         controller: function() {
+                            var self = this;
+
                             this.userName = this.name;
+
+                            this.storage = testFactory1;
                         },
                         controllerAs: "c",
-                        template: "{{c.userName}} {{c.name}}"
+                        template: "{{c.userName}} {{c.name}} {{c.storage.names()}}"
                     };
                 })
 
+                .factory("testFactory", function($http) {
+                    var factory = {};
+
+                    $http.get('./json.json').then(function(data) {
+                        console.log(data);
+                        factory.names = data.data;
+                    });
+
+                    return factory;
+                })
+
+                .factory("testFactory1", function(testFactory, $interval) {
+                    var factory = {};
+
+                    factory.names = function() {
+                        return testFactory.names;
+                    };
+
+                    $interval(function() {console.log(factory.names);}, 3000);
+
+                    return factory;
+                })
     })();
 
 </script>
