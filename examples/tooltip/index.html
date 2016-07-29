@@ -62,7 +62,7 @@
 
                     template: `
 
-                        <span ng-mousedown="tooltipMainCtrl.onShow()">Show tooltip</span>
+                        <span ng-mousedown="tooltipMainCtrl.onShow()">Show tooltip based on focus</span>
 
                         <div class="tooltip" tabindex="-1"
                         ng-show="tooltipMainCtrl.isVisible"
@@ -115,7 +115,7 @@
 
                     template: `
 
-                    <span ng-click="onPopupTriggerClick()">Show tooltip</span>
+                    <span ng-click="onPopupTriggerClick()">Show tooltip based on click</span>
 
                     <div class="tooltip" tabindex="-1"
                     ng-show="tooltipSecondCtrl.visibleLogout"

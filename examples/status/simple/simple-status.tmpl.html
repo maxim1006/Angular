@@ -1,0 +1,11 @@
+<div class="simple-status"
+     ng-class="{
+        '_success': $ctrl.getStatus() === $ctrl.storage.status.success || $ctrl.getStatus() === 'success',
+        '_error': $ctrl.getStatus() === $ctrl.storage.status.error || $ctrl.getStatus() === 'error',
+        '_pending': $ctrl.getStatus() === $ctrl.storage.status.pending || $ctrl.getStatus() === 'pending'
+     }"
+>
+
+    {{$ctrl.getText()}}
+
+</div>

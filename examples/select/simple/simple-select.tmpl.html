@@ -1,7 +1,8 @@
 <div class="simple-select" value="{{simpleSelectCtrl.currentValue.value}}"
      ng-class="{
         'simple-select_opened': simpleSelectCtrl.isOpened,
-        'simple-select_empty': !simpleSelectCtrl.options.length
+        'simple-select_empty': !simpleSelectCtrl.options.length,
+        'simple-select_{{simpleSelectCtrl.type}}': simpleSelectCtrl.type
      }"
 >
     <div class="simple-select__inner">

@@ -1,0 +1,221 @@
+<!doctype html>
+<html ng-app="app">
+<head>
+    <meta charset="UTF-8">
+    <title>Checkbox example</title>
+    <script src="https://code.jquery.com/jquery-2.2.0.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.1/angular.js"></script>
+    <style>
+        /* Simple Checkbox */
+        .simple-checkbox {
+            position: relative;
+            display: inline-block;
+            vertical-align: middle;
+            min-width: 18px;
+            min-height: 18px;
+            font-size: 0;
+            cursor: pointer;
+            -webkit-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
+            user-select: none;
+        }
+        .simple-checkbox._right .simple-checkbox__icon {
+            left: auto;
+            right: 2px;
+        }
+        .simple-checkbox._right.simple-checkbox._img {
+            margin-left: 21px;
+        }
+        .simple-checkbox._right .simple-checkbox__value-caption {
+            padding-left: 0;
+            padding-right: 23px;
+        }
+        .nc-field-list__item > .simple-checkbox._right {
+            width: 100%;
+        }
+        .simple-checkbox_nowrap {
+            display: block;
+        }
+        .simple-checkbox_nowrap .simple-checkbox__value-caption {
+            position: relative;
+        }
+        .simple-checkbox_nowrap .simple-checkbox__value-caption-arrow {
+            position: absolute;
+            right: -11px;
+            top: 50%;
+            margin-top: -6px;
+        }
+        .simple-checkbox_nowrap._arrow {
+            padding-right: 13px;
+        }
+        .simple-checkbox__input {
+            position: absolute;
+            left: -9999px;
+        }
+        .simple-checkbox__icon {
+            position: absolute;
+            top: 1px;
+            left: 2px;
+            display: inline-block;
+            width: 15px;
+            height: 15px;
+            background-color: white;
+            border: 1px solid #c6c9cc;
+            border-radius: 3px;
+            -webkit-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
+            user-select: none;
+        }
+        .simple-checkbox__input:hover:enabled:not(:checked) + .simple-checkbox__icon {
+            border-color: #657786;
+        }
+        .simple-checkbox__input:focus:enabled + .simple-checkbox__icon {
+            -webkit-box-shadow: 0 0 2px #1c6db4;
+            box-shadow: 0 0 2px #1c6db4;
+        }
+        .simple-checkbox__input:focus:enabled:not(:checked) + .simple-checkbox__icon {
+            border-color: #79bbf6;
+        }
+        .simple-checkbox__input:checked + .simple-checkbox__icon {
+            border-color: #3d8ace;
+            background: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAA8AAAAPCAYAAAA71pVKAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAAHBJREFUeNpi/P//PwO5gImBAkBXzYLkal4FxGeAWAkuAgowIvCq/wiwGyaOrqgDiMvxaLwLxErYNM9EUlROSCO65vL/qOAMPo3YnI1uAE6N2DSjG4BTIy7NMAPwagRhRjxpG5Qg3uOLeMYByxgAAQYA8e5l2UXxlMMAAAAASUVORK5CYII=") 0 0 no-repeat;
+            background-position: center;
+            background-color: #3d8ace;
+        }
+        .simple-checkbox__value-caption {
+            display: inline-block;
+            vertical-align: middle;
+            font-family: Gibson, Helvetica, Arial, sans-serif;
+            font-weight: 400;
+            font-style: normal;
+            font-size: 0;
+            line-height: 18px;
+        }
+        .simple-checkbox__value-caption-text {
+            display: inline-block;
+            vertical-align: middle;
+            font-size: 15px;
+            line-height: 16px;
+            font-family: Gibson, Helvetica, Arial, sans-serif;
+            font-weight: 400;
+            font-style: normal;
+        }
+        .simple-checkbox__value-caption-img {
+            display: inline-block;
+            vertical-align: middle;
+            width: 16px;
+            height: 16px;
+            margin-right: 5px;
+            background-repeat: no-repeat;
+        }
+        .simple-checkbox__value-caption-colored {
+            display: inline-block;
+            vertical-align: middle;
+            width: 12px;
+            height: 12px;
+            margin-right: 4px;
+            margin-top: -2px;
+            border-radius: 50%;
+        }
+        .simple-checkbox__value-caption-colored_pink {
+            background-color: #E46CFE;
+        }
+        .simple-checkbox__value-caption-colored_orange {
+            background-color: #DEBC2C;
+        }
+        .simple-checkbox__value-caption-colored_blue {
+            background-color: #48C0FB;
+        }
+        .simple-checkbox__value-caption-colored_green {
+            background-color: #53AD42;
+        }
+        .simple-checkbox__icon + .simple-checkbox__value-caption {
+            padding-left: 23px;
+        }
+        .simple-checkbox_nowrap .simple-checkbox__value-caption {
+            display: block;
+        }
+        .simple-checkbox_nowrap .simple-checkbox__value-caption-text {
+            width: 100%;
+            overflow: hidden;
+            white-space: nowrap;
+            text-overflow: ellipsis;
+        }
+        .simple-checkbox__input:disabled + .simple-checkbox__icon {
+            opacity: 0.5;
+            cursor: default;
+        }
+        .simple-checkbox__input:disabled ~ .simple-checkbox__value-caption {
+            cursor: default;
+        }
+        .simple-checkbox__input:disabled ~ .simple-checkbox__value-caption .simple-checkbox__value-caption-text {
+            color: #999;
+        }
+        .simple-checkbox._arrow .simple-checkbox__input:disabled ~ .simple-checkbox__value-caption,
+        .simple-checkbox._arrow .simple-checkbox__input:disabled + .simple-checkbox__icon {
+            cursor: pointer;
+        }
+        .simple-checkbox__description {
+            display: inline-block;
+            vertical-align: middle;
+            margin-left: 5px;
+            color: #b2b2b2;
+            font-size: 12px;
+            font-style: normal;
+        }
+        .simple-checkbox__error {
+            display: block;
+            font-size: 15px;
+            font-family: Gibson, Helvetica, Arial, sans-serif;
+            font-weight: 400;
+            font-style: normal;
+            color: #c43133;
+            line-height: 1.2;
+            cursor: default;
+        }
+        .simple-checkbox__error + .simple-checkbox__error {
+            padding-top: 3px;
+        }
+        .simple-checkbox__error-wrap {
+            margin-top: 5px;
+            padding-left: 23px;
+        }
+    </style>
+</head>
+<body>
+
+    <outer-directive>
+    </outer-directive>
+
+
+<script>
+    (function() {
+
+        angular.module('app', []);
+
+        angular.module('app').directive('outerDirective', function() {
+             return {
+                 controller: function() {
+                     var self = this;
+
+                     self.value1 = true;
+                     self.value2 = false;
+
+                 },
+                 controllerAs: "ctrl",
+                 template: `
+                     <simple-checkbox value="ctrl.value1"></simple-checkbox> (value: {{ctrl.value1}})
+                     <p></p>
+                     <simple-checkbox value="ctrl.value2"></simple-checkbox> (value: {{ctrl.value2}})
+                 `
+             }
+        });
+
+    })();
+</script>
+<script src="./simpleCheckboxComponent.js"></script>
+
+</body>
+</html>

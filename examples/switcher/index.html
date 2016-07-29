@@ -1,0 +1,191 @@
+<!doctype html>
+<html ng-app="app">
+<head>
+    <meta charset="UTF-8">
+    <title>Switcher example</title>
+    <script src="https://code.jquery.com/jquery-2.2.0.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.0/angular.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/angular-ui-router/0.2.18/angular-ui-router.js"></script>
+</head>
+<body>
+<style>
+    * {
+        padding: 0;
+        margin: 0;
+        box-sizing: border-box;
+    }
+
+    body {
+        padding: 20px;
+    }
+    simple-switcher {
+        display: block;
+    }
+    simple-switcher+simple-switcher {
+        margin-top: 10px;
+    }
+    .simple-switcher {
+        display: -webkit-box;
+        display: -ms-flexbox;
+        display: flex;
+        -webkit-user-select: none;
+        -moz-user-select: none;
+        -ms-user-select: none;
+        user-select: none;
+        cursor: pointer;
+    }
+    .simple-switcher__text {
+        margin-left: 18px;
+        font-size: 16px;
+        line-height: 20px;
+        color: #2a3641;
+        letter-spacing: 0.2px;
+    }
+    .simple-switcher__control {
+        position: relative;
+        width: 52px;
+        height: 20px;
+        line-height: 20px;
+        padding-left: 22px;
+        border-radius: 10px;
+        background: #d6d6d6;
+    }
+    .simple-switcher__control:before {
+        content: '';
+        position: absolute;
+        top: 50%;
+        margin-top: -6px;
+        left: 4px;
+        width: 12px;
+        height: 12px;
+        border-radius: 50%;
+        background: #fff;
+        -webkit-transition: -webkit-transform .3s ease;
+        transition: transform .3s ease;
+        -webkit-transform: translate3d(0, 0, 0);
+        transform: translate3d(0, 0, 0);
+    }
+    .simple-switcher__control:after {
+        display: inline-block;
+        vertical-align: middle;
+        content: 'off';
+        font-size: 10px;
+        line-height: 20px;
+        color: #8e8e8e;
+        text-transform: uppercase;
+        letter-spacing: 1.4px;
+    }
+    .simple-switcher__control_active {
+        padding-left: 11px;
+        background-color: #55adff;
+        background-image: -webkit-gradient(linear, left bottom, left top, color-stop(85%, #55adff), to(#499eed));
+        background-image: -webkit-linear-gradient(bottom, #55adff 85%, #499eed);
+        background-image: linear-gradient(to top, #55adff 85%, #499eed);
+    }
+    .simple-switcher__control_active:before {
+        -webkit-transform: translate3d(32px, 0, 0);
+        transform: translate3d(32px, 0, 0);
+    }
+    .simple-switcher__control_active:after {
+        content: 'on';
+        color: #fff;
+    }
+</style>
+
+    <outer-directive></outer-directive>
+
+
+<script>
+
+    (function() {
+
+        angular.module('app', []);
+
+
+        angular.module('app')
+            .directive('outerDirective', function() {
+                return {
+                    scope: {},
+
+                    bindToController: {},
+
+                    controller: function() {
+                    },
+
+                    controllerAs: "tooltipMainCtrl",
+
+                    link: function(scope, el, attrs, ctrl) {
+                    },
+
+                    template: `
+
+                        <simple-switcher text="Text" state="true"></simple-switcher>
+                        <simple-switcher on-text="On text" off-text="Off text"></simple-switcher>
+
+                    `
+                };
+            })
+
+
+
+            .component('simpleSwitcher', {
+
+                bindings: {
+                    text: '@',
+                    onText: '@',
+                    offText: '@',
+                    state: '=?'
+                },
+
+                controller: function ($scope, $element, $attrs, $timeout) {
+
+                    var self = this;
+
+                    this.$onInit = function() {
+
+                        self.toggle = function() {
+                            self.state = !self.state;
+                        }
+
+                    };
+
+
+                },
+
+                template: `
+
+                    <div class="simple-switcher" ng-click="$ctrl.toggle()">
+
+                        <div class="simple-switcher__control"
+                             ng-class="{'simple-switcher__control_active': $ctrl.state}">
+                        </div>
+
+                        <div class="simple-switcher__text"
+                            ng-if="$ctrl.text"
+                             ng-class="{'simple-switcher__text_active': !$ctrl.state}">
+                            {{$ctrl.text}}
+                        </div>
+
+                        <div class="simple-switcher__text"
+                             ng-if="$ctrl.onText && $ctrl.state"
+                             ng-class="{'simple-switcher__text_active': $ctrl.state}">
+                            {{$ctrl.onText}}
+                        </div>
+
+                        <div class="simple-switcher__text"
+                            ng-if="!$ctrl.state && $ctrl.offText"
+                             ng-class="{'simple-switcher__text_active': !$ctrl.state}">
+                            {{$ctrl.offText}}
+                        </div>
+
+                    </div>
+                `
+
+            });
+
+    })();
+
+</script>
+
+</body>
+</html>

@@ -1,0 +1,69 @@
+<label class="simple-checkbox"
+       ng-class="::{
+           'simple-checkbox_nowrap': $ctrl.nowrap,
+           '_arrow': $ctrl.$exploreUrl
+       }"
+       ng-if="$ctrl.visible !== false"
+>
+
+    <input class="simple-checkbox__input"
+           type="checkbox"
+           id="{{::$ctrl.idValue}}"
+           name="{{::$ctrl.idValue}}"
+           ng-model="$ctrl.value"
+           ng-disabled="$ctrl.disabled"
+    >
+    <i class="simple-checkbox__icon"></i>
+
+
+
+
+    <span class="simple-checkbox__value-caption"
+          ng-if="::!$ctrl.valueCaption"
+    >
+            <span class="simple-checkbox__value-caption"
+                  title="{{$ctrl.nowrap ? $ctrl.caption : ''}}"
+            >
+
+                <span class="simple-checkbox__value-caption-img"
+                    ng-if="::$ctrl.icon"
+                    ng-style="{
+                        'background-image': 'url({{$ctrl.icon}})'
+                    }"
+                ></span>
+
+
+                <span class="simple-checkbox__value-caption-colored"
+                      ng-if="::$ctrl.color"
+                      ng-style="{
+                          'background-color': $ctrl.color
+                      }"
+                ></span>
+
+                <span class="simple-checkbox__value-caption-text"
+                    ng-if="::$ctrl.caption">
+                    {{$ctrl.caption}}
+                </span>
+
+                <a class="simple-checkbox__value-caption-arrow"
+                   ng-class="{
+                       'simple-checkbox__value-caption-arrow_full': $ctrl.disabled
+                   }"
+                   ng-if="$ctrl.exploreUrl"
+                   href="{{$ctrl.exploreUrl}}"
+                ></a>
+
+            </span>
+
+            <em class="simple-checkbox__description"
+                ng-if="::$ctrl.description"
+            >{{$ctrl.description}}</em>
+    </span>
+
+
+
+
+    <div ng-if="$ctrl.validationMessages" class="simple-checkbox__error-wrap">
+        <div ng-repeat="item in $ctrl.validationMessages track by $index" class="simple-checkbox__error">{{item}}</div>
+    </div>
+</label>

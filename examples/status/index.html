@@ -1,0 +1,106 @@
+<!doctype html>
+<html ng-app="app">
+<head>
+    <meta charset="UTF-8">
+    <title>Status example</title>
+    <script src="https://code.jquery.com/jquery-2.2.0.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.1/angular.js"></script>
+    <style>
+        .wrapper {
+            display: inline-block;
+            position: relative;
+        }
+        .simple-status {
+            font-size: 14px;
+            line-height: 18px;
+            letter-spacing: 1px;
+            opacity: 0;
+            -webkit-transition: opacity 0.3s;
+            transition: opacity 0.3s;
+            white-space: nowrap;
+        }
+        .simple-status._pending {
+            opacity: 1;
+            color: #dcc840;
+        }
+        .simple-status._success {
+            color: #5EDE7C;
+            opacity: 0;
+            -webkit-transition-delay: 1.5s;
+            transition-delay: 1.5s;
+        }
+        .simple-status._error {
+            color: #F55A86;
+            opacity: 0;
+            -webkit-transition-delay: 1.5s;
+            transition-delay: 1.5s;
+        }
+        simple-status {
+            position: absolute;
+            top: 50%;
+            left: 110%;
+            -webkit-transform: translateY(-50%);
+            -ms-transform: translateY(-50%);
+            transform: translateY(-50%);
+        }
+    </style>
+</head>
+<body>
+
+    <outer-directive>
+    </outer-directive>
+
+
+<script>
+    (function() {
+
+        angular.module('app', []);
+
+        angular.module('app').directive('outerDirective', function(simpleStatusFactory, $timeout, $q) {
+             return {
+                 controller: function() {
+                     var self = this;
+
+                     self.seconds = 1;
+
+                     self.onLoad = function() {
+
+                         var defer = $q.defer();
+
+                         self.status = simpleStatusFactory.status.pending;
+
+                         $timeout(function() {
+                             console.log(self.seconds);
+                             defer.resolve();
+                         }, self.seconds*1000);
+
+                         defer.promise.then(function() {
+                             self.status = simpleStatusFactory.status.success;
+                         }, function() {
+                             self.status = simpleStatusFactory.status.error;
+                         });
+
+                         self.getTextOnLoad = function() {
+                              return 'Loaded in ' + self.seconds + 's!';
+                         };
+                     };
+
+                 },
+                 controllerAs: "ctrl",
+                 template: `
+                     <div class="wrapper">
+                         <input type="number" placeholder="Number of seconds" ng-model="ctrl.seconds" min="0" max="10">
+                         <button ng-click="ctrl.onLoad()">Load in {{ctrl.seconds}}s</button>
+                         <simple-status status="ctrl.status" success-text="ctrl.getTextOnLoad();" pending-text="Loading..." error-text="Error!"></simple-status>
+                     </div>
+                 `
+             }
+        });
+
+    })();
+</script>
+<script src="./simple/simpleStatusComponent.js"></script>
+<script src="./simple/simpleStatusFactory.js"></script>
+
+</body>
+</html>

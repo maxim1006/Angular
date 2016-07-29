@@ -4,7 +4,8 @@ angular.module('app').directive('simpleSelect', function simpleSelectDirective($
         bindToController: {
             options: '<',
             currentValue: '=',
-            internal: '<'
+            internal: '<',
+            type: '@'
         },
 
         controller: function ($scope, $element, $attrs, $timeout) {
