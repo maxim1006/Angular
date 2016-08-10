@@ -1,0 +1,14 @@
+<button class="material-button"
+        material-wave
+        ng-class="{
+                    'button-default_{{$ctrl.color}}': $ctrl.color,
+                    'button-default_{{$ctrl.size}}': $ctrl.size,
+                    'button-default_disabled': $ctrl.disabled,
+                    'button-default_{{$ctrl.mod}}': $ctrl.mod,
+                   '{{$ctrl.customClass}}': $ctrl.customClass
+                  }"
+        type="{{$ctrl.type}}"
+        ng-disabled="{{$ctrl.disabled}}"
+>
+    {{$ctrl.text}}
+</button>
