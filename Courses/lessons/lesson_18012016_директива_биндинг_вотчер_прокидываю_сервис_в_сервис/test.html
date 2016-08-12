@@ -19,7 +19,9 @@
                 .directive("outerDir", function() {
                     return {
                         scope: {},
-                        templateUrl: "test-dir.html"
+                        templateUrl: "test-dir.html",
+                        controller: function() {this.name="outer ctrl"},
+                        controllerAs: "outerDirCtrl"
                     };
                 })
                 .directive("innerDir", function() {
@@ -32,7 +34,7 @@
                             this.userName = $scope.userName;
                        },
                         controllerAs: "c",
-                        template: "{{c.userName}} {{c.surName}}"
+                        templateUrl: "inner-dir.html"
                     };
                 })
 
