@@ -1,0 +1,82 @@
+<!doctype html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Custom bootstrap with file preload</title>
+    <script src="https://code.jquery.com/jquery-2.2.0.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.1/angular.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/angular-ui-router/0.2.18/angular-ui-router.js"></script>
+</head>
+<body>
+
+
+<script>
+
+    (function() {
+
+        angular.module("app", [])
+        .config(function($httpProvider) {
+
+            /***Need for proper XHR***/
+            $httpProvider.defaults.useXDomain = false;
+            $httpProvider.defaults.withCredentials = false;
+            delete $httpProvider.defaults.headers.common['X-Requested-With'];
+            /************************/
+
+        })
+        .run(function () {
+
+            document.body.appendChild(getElementWithText('div', 'Module app is bootstrapped'));
+
+        });
+
+        angular.module("appInit", [])
+                .config(function() {})
+                .run(function ($http) {
+
+                    document.body.appendChild(getElementWithText('div', 'Module appInit is bootstrapped'));
+
+                    $http.get("./first.json")
+                        .then(function (data) {
+                            window.first = data;
+                            document.body.appendChild(getElementWithText('div', data.data.fileName + ' is fetched'));
+                            console.log("GET first.json success", data);
+                            return $http.get("./second.json");
+                        },
+                        function (error) {
+                            window.first = false;
+                            document.body.appendChild(getElementWithText('div', 'first.json is not fetched'));
+                            console.log("GET first.json error", error);
+                            return $http.get("./second.json");
+                        })
+                        .then(function (data) {
+                            window.second = data;
+                            document.body.appendChild(getElementWithText('div', data.data.fileName + ' is fetched'));
+                            console.log("GET second.json success", data);
+                            angular.bootstrap(document.body, ["app"]);
+                        },
+                        function (error) {
+                            window.second = false;
+                            document.body.appendChild(getElementWithText('div', 'second.json is not fetched'));
+                            console.log("GET second.json error", error);
+                            angular.bootstrap(document.body, ["app"]);
+                        });
+                });
+
+        angular.bootstrap(document.head, ["appInit"]);
+
+
+
+        /*Helpers*/
+        function getElementWithText(elem, text) {
+            var div = document.createElement(elem);
+            div.textContent = text;
+            return div;
+        }
+
+    })();
+
+</script>
+
+</body>
+</html>
