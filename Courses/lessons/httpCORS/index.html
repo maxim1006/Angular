@@ -42,6 +42,22 @@
             }
         })
         /************************/
+
+
+        /******/
+        $http({
+                    method: 'GET',
+                    url: _path,
+                    headers: {
+                        'content-type': 'text/plain'
+                    },
+                    transformResponse: undefined,
+                    transformResponse: [function (data) {
+                      // Do whatever you want!
+                      return data;
+                  }]
+                })
+        /****/
 -->
 
 
