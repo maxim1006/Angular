@@ -1,0 +1,244 @@
+<!doctype html>
+<html ng-app="app">
+<head>
+    <meta charset="UTF-8">
+    <title>Table sort example</title>
+    <script src="https://code.jquery.com/jquery-2.2.0.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.0/angular.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/angular-ui-router/0.2.18/angular-ui-router.js"></script>
+    <style>
+        .simple-table {
+            border-collapse: collapse;
+            table-layout: fixed;
+        }
+
+        .simple-table__th {
+            padding: 12px 15px;
+            font-size: 14px;
+            font-family: Tahoma;
+            font-weight: 400;
+            text-align: left;
+            color: #a3a3a3;
+            border-bottom: 1px solid #e7eaec;
+            cursor: pointer;
+            user-select: none;
+        }
+
+        .simple-table__tr:hover {
+            background-color: #fafafa;
+        }
+
+        .simple-table__tr._th:hover {
+            background-color: #fff;
+        }
+
+        .simple-table__td {
+            padding: 12px 15px;
+            font-size: 14px;
+            font-family: Tahoma;
+            border-bottom: 1px solid #e7eaec;
+            vertical-align: top;
+            color: #000;
+        }
+
+        .sort-arrow {
+            display: inline-block;
+            vertical-align: top;
+            margin-top: 7px;
+            border-left: 4px solid transparent;
+            border-right: 4px solid transparent;
+        }
+
+        .sort-arrow._asc {
+             border-bottom: 4px solid #173147;
+        }
+
+        .sort-arrow._desc {
+             border-top: 4px solid #173147;
+        }
+    </style>
+</head>
+<body>
+
+
+    <simple-table></simple-table>
+
+
+<script>
+
+    (function() {
+
+        angular.module('app', []);
+
+
+        angular.module('app')
+            .directive('simpleTable', function() {
+                return {
+                    scope: {},
+
+                    bindToController: {},
+
+                    controller: function() {
+                        var self = this;
+
+                        this.isLoaderVisible = true;
+                        this.orderBy = 'organization';
+                        this.orderReverse = false;
+
+                        this.handleOrder = function(orderBy) {
+                            self.orderReverse = (self.orderBy === orderBy) ? !self.orderReverse : false;
+                            self.orderBy = orderBy;
+                        };
+
+                        /*model*/
+                        this.items = [
+                            {
+                                organization: "Google",
+                                product: "Angular",
+                                users: 2000000
+                            },
+                            {
+                                organization: "Facebook",
+                                product: "React",
+                                users: 1800000
+                            },
+                            {
+                                organization: "Yandex",
+                                product: "BEM",
+                                users: 200000
+                            }
+                        ];
+
+                    },
+
+                    controllerAs: "ctrl",
+
+                    link: function(scope, el, attrs, ctrl) {
+                    },
+
+                    template: `
+
+                        <p>
+                            <label>
+                                <span>Search</span>
+                                <input type="text" ng-model="ctrl.searchString">
+                            </label>
+                        </p>
+
+                       <table class="simple-table">
+                            <thead>
+                                <tr class="simple-table__tr _th">
+                                    <th class="simple-table__th">
+                                        <div class="sort"
+                                             ng-click="ctrl.handleOrder('organization')">
+                                            Organization
+                                            <span class="sort-arrow"
+                                                  ng-show="ctrl.orderBy === 'organization'"
+                                                  ng-class="ctrl.orderReverse ? '_desc' : '_asc'"></span>
+                                        </div>
+                                    </th>
+
+                                    <th class="simple-table__th">
+                                        <div class="sort"
+                                             ng-click="ctrl.handleOrder('products')">
+                                            Products
+                                            <span class="sort-arrow"
+                                                  ng-show="ctrl.orderBy === 'products'"
+                                                  ng-class="ctrl.orderReverse ? '_desc' : '_asc'"></span>
+                                        </div>
+                                    </th>
+
+                                    <th class="simple-table__th">
+                                        <div class="sort"
+                                             ng-click="ctrl.handleOrder('users')">
+                                            Users
+                                            <span class="sort-arrow"
+                                                  ng-show="ctrl.orderBy === 'users'"
+                                                  ng-class="ctrl.orderReverse ? '_desc' : '_asc'"></span>
+                                        </div>
+                                    </th>
+                                </tr>
+                            </thead>
+                            <tbody>
+
+                                <tr class="simple-table__tr" ng-repeat="item in ctrl.items | orderBy:ctrl.orderBy:ctrl.orderReverse | filter:ctrl.searchString | limitTo:20 track by $index">
+
+                                    <td class="simple-table__td">
+                                        {{ item.organization }}
+                                    </td>
+
+                                    <td class="simple-table__td">
+                                        {{ item.product }}
+                                    </td>
+
+                                    <td class="simple-table__td">
+                                        {{ item.users }}
+                                    </td>
+
+                                </tr>
+
+                            </tbody>
+                        </table>
+
+                    `,
+                };
+            })
+
+
+
+            .directive('tooltipSecond', function($document) {
+                return {
+                    scope: {},
+
+                    bindToController: {},
+
+                    controller: function() {
+                    },
+
+                    controllerAs: "tooltipSecondCtrl",
+
+                    link: function(scope, el, attrs, ctrl) {
+                        scope.onPopupTriggerClick = function() {
+                            !ctrl.visibleLogout ? ctrl.visibleLogout = true : ctrl.visibleLogout = false;
+                        };
+
+                        $document.on('click', onUserNameClick);
+
+                        scope.$on('$destroy', function() {
+                            $document.off('click', onUserNameClick);
+                        });
+
+
+
+                        /*Helpers*/
+                        function onUserNameClick(e) {
+                            if (el[0] !== e.target && !el[0].contains(e.target)) {
+                                scope.$apply(function () {
+                                    ctrl.visibleLogout = false;
+                                });
+                            }
+                        }
+                    },
+
+                    template: `
+
+                    <span ng-click="onPopupTriggerClick()">Show tooltip based on click</span>
+
+                    <div class="tooltip" tabindex="-1"
+                    ng-show="tooltipSecondCtrl.visibleLogout"
+                    >
+
+                    Popup
+
+                    </div>
+
+                `,
+                };
+            });
+
+    })();
+
+</script>
+
+</body>
+</html>

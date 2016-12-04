@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <title>Общая инфа</title>
     <script src="https://code.jquery.com/jquery-2.2.0.min.js"></script>
-    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.5/angular.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.0/angular.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/angular-ui-router/0.2.18/angular-ui-router.js"></script>
 </head>
 <body>
@@ -26,16 +26,38 @@
         angular.module('app')
             .controller('outerDirController', function outerDirCtrl($scope) {
                 this.prop2 = "prop2";
+                this.prop = "Prop with <"
             })
             .directive('outerDir', function($rootScope) {
                 return {
                     scope: {},
+                    bindToController: {
+                    },
                     controller: 'outerDirController',
                     controllerAs: "outerDirCtrl",
                     link: function(scope, el, attrs) {
                         scope.prop1 = "prop1";
                     },
-                    template: "{{prop1}} {{outerDirCtrl.prop2}}"
+                    template: "{{prop1}} {{outerDirCtrl.prop2}} <p>outerDirCtrl.prop {{outerDirCtrl.prop}}</p> <p><inner-dir prop='outerDirCtrl.prop'></inner-dir></p>"
+                };
+            })
+            .directive('innerDir', function($rootScope) {
+                return {
+                    scope: {},
+                    bindToController: {
+                        prop: "<"
+                    },
+                    controller: function() {
+                        var self = this;
+
+                        this.changeProp = function() {
+                            self.prop = 2;
+                        };
+                    },
+                    controllerAs: "innerDirCtrl",
+                    link: function(scope, el, attrs) {
+                    },
+                    template: "<p ng-click='innerDirCtrl.changeProp()'> innerDir {{innerDirCtrl.prop}}</p>"
                 };
             });
 
