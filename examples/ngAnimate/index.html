@@ -1,0 +1,140 @@
+<!doctype html>
+<html ng-app="app">
+<head>
+    <meta charset="UTF-8">
+    <title>ngAnimate</title>
+    <script src="https://code.jquery.com/jquery-2.2.0.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.0/angular.js"></script>
+    <script src="https://code.angularjs.org/1.5.1/angular-animate.js"></script>
+</head>
+<body>
+
+
+<script type="text/html" id="template">
+    <p>
+        <input type="text" ng-model="ctrl.addedName"> <button ng-click="ctrl.addName()">Add name</button>
+    </p>
+    <p>
+        <input type="text" ng-model="ctrl.removedName"> <button ng-click="ctrl.removeName()">Remove name</button>
+    </p>
+    <p>
+        <input type="text" placeholder="search" ng-model="ctrl.search"> <button ng-click="ctrl.setOrder()">Sort</button>
+    </p>
+    <div class="_animatable" ng-repeat="name in ctrl.names | orderBy:ctrl.orderBy:ctrl.orderReverse | filter:ctrl.search track by $index">
+        {{name}}
+    </div>
+
+    <div style="margin: 50px 0 0">
+        <input type="checkbox" ng-model="ctrl.checked"> <span class="_animatable" ng-show="ctrl.checked">S/H text</span>
+    </div>
+</script>
+
+    <animated-block></animated-block>
+
+<script>
+
+    (function() {
+
+        angular.module('app', ['ngAnimate']);
+
+
+        angular.module('app')
+            .config(($animateProvider) => {
+                $animateProvider.classNameFilter(/_animatable/);
+            })
+            .directive('animatedBlock', () => {
+                return {
+                    scope: {},
+
+                    bindToController: {},
+
+                    controller() {
+                        let self = this;
+
+                        self.names = ['Max', 'Aliya', 'Anton'];
+
+                        self.orderBy = 'name';
+
+                        self.setOrder = () => {
+                            self.orderReverse = !self.orderReverse;
+                        };
+
+                        self.addName = () => {
+                            self.names.push(self.addedName);
+                        };
+
+                        self.removeName = () => {
+                            let length = self.names.length,
+                                i = 0;
+
+                            for (; i < length; i++ ) {
+                                if (self.names[i] === self.removedName) {
+                                    self.names.splice(i, 1);
+                                    i--;
+                                }
+                            }
+                        };
+                    },
+
+                    controllerAs: "ctrl",
+
+                    link(scope, el, attrs, ctrl) {
+                    },
+
+                    template: template.innerHTML,
+                };
+            });
+
+
+        angular.module('app')
+            .animation('._animatable', () => {
+                return {
+
+                    enter(element, doneFn) {
+                        console.log(element, "Enter animation");
+                        element.css('opacity',0);
+                        jQuery(element).animate({
+                            opacity: 1
+                        }, doneFn);
+                    },
+
+                    move(element, doneFn) {
+                        console.log(element, "Move animation");
+                    },
+
+                    leave(element, doneFn) {
+                        element.css('opacity', 1);
+                        jQuery(element).animate({
+                            opacity: 0
+                        }, doneFn);
+                    },
+
+                    addClass(element, className, doneFn) {
+                        console.log(arguments, "addClass animation");
+                        element.css('opacity', 1);
+                        jQuery(element).animate({
+                            opacity: 0
+                        }, doneFn);
+                    },
+
+                    removeClass(element, className, doneFn) {
+                        console.log(arguments, "removeClass animation");
+                        element.css('opacity',0);
+                        jQuery(element).animate({
+                            opacity: 1
+                        }, doneFn);
+                    },
+
+                    setClass(element, addedClass, removedClass, doneFn) {
+                        element.fadeIn(300, doneFn);
+                        console.log(arguments, "setClass animation");
+                    }
+                }
+            });
+
+    })();
+
+</script>
+
+</body>
+</html>
